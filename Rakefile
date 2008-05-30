@@ -23,3 +23,23 @@ desc "Unit Tests"
   t.pattern = "test/unit/*_test.rb"
   t.verbose = true
 end
+
+
+namespace :test do
+  desc 'Measures test coverage using rcov'
+  task :rcov do
+    rm_f "coverage"
+    rm_f "coverage.data"
+    rcov = "rcov --rails --aggregate coverage.data --text-summary -Ilib"
+    
+    ENV['RAILS_ENV'] = "test"
+    require File.dirname(__FILE__) + '/config/environment'
+    puts "Using " + DB
+    %x(mysql -u#{MYSQL_USER} < #{File.dirname(__FILE__) + "/test/fixtures/db_definitions/mysql.sql"}) if DB == 'mysql'
+
+    Rake::Task["test:migrate"].invoke
+    
+    system("#{rcov} --html #{Dir.glob('test/**/*_test.rb').join(' ')}")
+    system("open coverage/index.html") if PLATFORM['darwin']
+  end
+end
