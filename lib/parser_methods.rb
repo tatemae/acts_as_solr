@@ -1,7 +1,5 @@
 module ActsAsSolr #:nodoc:
-  
   module ParserMethods
-    
     protected    
     
     # Method used by mostly all the ClassMethods when doing a search
@@ -30,7 +28,7 @@ module ActsAsSolr #:nodoc:
         
         if models.nil?
           # TODO: use a filter query for type, allowing Solr to cache it individually
-          models = "AND #{solr_configuration[:type_field]}:#{self.name}"
+          models = "AND #{solr_type_condition}"
           field_list = solr_configuration[:primary_key_field]
         else
           field_list = "id"
@@ -45,11 +43,17 @@ module ActsAsSolr #:nodoc:
           # TODO: set the sort parameter instead of the old ;order. style.
           query_options[:query] << ';' << replace_types([order], false)[0]
         end
-               
+        
         ActsAsSolr::Post.execute(Solr::Request::Standard.new(query_options))
       rescue
         raise "There was a problem executing your search: #{$!}"
       end            
+    end
+    
+    def solr_type_condition
+      subclasses.inject("(#{solr_configuration[:type_field]}:#{self.name}") do |condition, subclass|
+        condition << " OR #{solr_configuration[:type_field]}:#{subclass.name}"
+      end << ')'
     end
     
     # Parses the data returned from Solr
@@ -91,20 +95,10 @@ module ActsAsSolr #:nodoc:
     # on the acts_as_solr call
     def replace_types(strings, include_colon=true)
       suffix = include_colon ? ":" : ""
-      if configuration[:solr_fields] && configuration[:solr_fields].is_a?(Array)
-        configuration[:solr_fields].each do |solr_field|
-          field_type = get_solr_field_type(:text)
-          if solr_field.is_a?(Hash)
-            solr_field.each do |name,value|
-         	    if value.respond_to?(:each_pair)
-                field_type = get_solr_field_type(value[:type]) if value[:type]
-              else
-                field_type = get_solr_field_type(value)
-              end
-              field = "#{name.to_s}_#{field_type}#{suffix}"
-              strings.each_with_index {|s,i| strings[i] = s.gsub(/#{name.to_s}_t#{suffix}/,field) }
-            end
-          end
+      if configuration[:solr_fields]
+        configuration[:solr_fields].each do |name, options|
+          field = "#{name.to_s}_#{get_solr_field_type(options[:type])}#{suffix}"
+          strings.each_with_index {|s,i| strings[i] = s.gsub(/#{name.to_s}_t#{suffix}/,field) }
         end
       end
       strings
@@ -123,5 +117,4 @@ module ActsAsSolr #:nodoc:
       end
     end
   end
-
 end

@@ -4,6 +4,7 @@ class CreateBooks < ActiveRecord::Migration
       t.column :category_id, :integer
       t.column :name, :string
       t.column :author, :string
+      t.column :type, :string
     end
   end
 
