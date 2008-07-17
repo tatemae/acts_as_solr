@@ -72,7 +72,7 @@ module ActsAsSolr #:nodoc:
       add_scores(result, solr_data) if configuration[:format] == :objects && options[:scores]
       
       results.update(:facets => solr_data.data['facet_counts']) if options[:facets]
-      results.update({:docs => result, :total => solr_data.total, :max_score => solr_data.max_score})
+      results.update({:docs => result, :total => solr_data.total, :max_score => solr_data.max_score, :query_time => solr_data.data['responseHeader']['QTime']})
       SearchResults.new(results)
     end
     
