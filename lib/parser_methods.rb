@@ -91,20 +91,10 @@ module ActsAsSolr #:nodoc:
     # on the acts_as_solr call
     def replace_types(strings, include_colon=true)
       suffix = include_colon ? ":" : ""
-      if configuration[:solr_fields] && configuration[:solr_fields].is_a?(Array)
-        configuration[:solr_fields].each do |solr_field|
-          field_type = get_solr_field_type(:text)
-          if solr_field.is_a?(Hash)
-            solr_field.each do |name,value|
-         	    if value.respond_to?(:each_pair)
-                field_type = get_solr_field_type(value[:type]) if value[:type]
-              else
-                field_type = get_solr_field_type(value)
-              end
-              field = "#{name.to_s}_#{field_type}#{suffix}"
-              strings.each_with_index {|s,i| strings[i] = s.gsub(/#{name.to_s}_t#{suffix}/,field) }
-            end
-          end
+      if configuration[:solr_fields]
+        configuration[:solr_fields].each do |name, options|
+          field = "#{name.to_s}_#{get_solr_field_type(options[:type])}#{suffix}"
+          strings.each_with_index {|s,i| strings[i] = s.gsub(/#{name.to_s}_t#{suffix}/,field) }
         end
       end
       strings

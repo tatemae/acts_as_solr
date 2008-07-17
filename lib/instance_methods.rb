@@ -39,22 +39,12 @@ module ActsAsSolr #:nodoc:
               solr_configuration[:primary_key_field] => record_id(self).to_s}
 
       # iterate through the fields and add them to the document,
-      configuration[:solr_fields].each do |field|
-        field_name = field
-        field_type = configuration[:facets] && configuration[:facets].include?(field) ? :facet : :text
-        field_boost= solr_configuration[:default_boost]
-
-        if field.is_a?(Hash)
-          field_name = field.keys.pop
-          if field.values.pop.respond_to?(:each_pair)
-            attributes = field.values.pop
-            field_type = get_solr_field_type(attributes[:type]) if attributes[:type]
-            field_boost= attributes[:boost] if attributes[:boost]
-          else
-            field_type = get_solr_field_type(field.values.pop)
-            field_boost= field[:boost] if field[:boost]
-          end
-        end
+      configuration[:solr_fields].each do |field_name, options|
+        #field_type = configuration[:facets] && configuration[:facets].include?(field) ? :facet : :text
+        
+        field_boost = options[:boost] || solr_configuration[:default_boost]
+        field_type = get_solr_field_type(options[:type])
+        
         value = self.send("#{field_name}_for_solr")
         value = set_value_if_nil(field_type) if value.to_s == ""
         

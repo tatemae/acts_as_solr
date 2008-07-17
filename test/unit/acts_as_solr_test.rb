@@ -24,6 +24,10 @@ class ActsAsSolrTest < Test::Unit::TestCase
     assert_equal 0, Post.count_by_solr('aardvark')
   end
 
+  def test_type_determined_from_database_if_not_explicitly_set
+    assert Post.configuration[:solr_fields][:posted_at][:type] == :date
+  end
+
   # Testing basic solr search:
   #  Model.find_by_solr 'term'
   # Note that you're able to mix free-search with fields and boolean operators
@@ -304,7 +308,7 @@ class ActsAsSolrTest < Test::Unit::TestCase
     
     books.records.each { |book| assert_not_nil book.solr_score }
     assert_equal 0.52808195, books.docs.first.solr_score
-    assert_equal 0.2428928, books.docs.last.solr_score
+    assert_equal 0.25081474, books.docs.last.solr_score
   end
   
   # Making sure nothing breaks when html entities are inside
@@ -378,7 +382,7 @@ class ActsAsSolrTest < Test::Unit::TestCase
     
     books = Book.find_by_solr 'ruby^10 OR splinter', {:scores => true, :order => 'score desc' }
     assert_equal 0.52808195, books.docs.first.solr_score
-    assert_equal 0.2428928, books.docs.last.solr_score
+    assert_equal 0.25081474, books.docs.last.solr_score
   end
   
   # Search based on fields with the :date format
