@@ -19,10 +19,10 @@ namespace :solr do
       Dir.chdir(SOLR_PATH) do
         pid = fork do
           #STDERR.close
-          exec "java -Dsolr.data.dir=solr/data/#{ENV['RAILS_ENV']} -Djetty.port=#{SOLR_PORT} -jar start.jar"
+          exec "java -Dsolr.data.dir=#{SOLR_DATA_PATH} -Djetty.logs=#{SOLR_LOGS_PATH} -Djetty.port=#{SOLR_PORT} -jar start.jar"
         end
         sleep(5)
-        File.open("#{SOLR_PATH}/tmp/#{ENV['RAILS_ENV']}_pid", "w"){ |f| f << pid}
+        File.open("#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid", "w"){ |f| f << pid}
         puts "#{ENV['RAILS_ENV']} Solr started successfully on #{SOLR_PORT}, pid: #{pid}."
       end
     end
@@ -31,7 +31,7 @@ namespace :solr do
   desc 'Stops Solr. Specify the environment by using: RAILS_ENV=your_env. Defaults to development if none.'
   task :stop do
     fork do
-      file_path = "#{SOLR_PATH}/tmp/#{ENV['RAILS_ENV']}_pid"
+      file_path = "#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid"
       if File.exists?(file_path)
         File.open(file_path, "r") do |f| 
           pid = f.readline
@@ -41,7 +41,7 @@ namespace :solr do
         Rake::Task["solr:destroy_index"].invoke if ENV['RAILS_ENV'] == 'test'
         puts "Solr shutdown successfully."
       else
-        puts "Solr is not running.  I haven't done anything."
+        puts "PID file not found at #{file_path}. Either Solr is not running or no PID file was written."
       end
     end
   end
@@ -49,9 +49,9 @@ namespace :solr do
   desc 'Remove Solr index'
   task :destroy_index do
     raise "In production mode.  I'm not going to delete the index, sorry." if ENV['RAILS_ENV'] == "production"
-    if File.exists?("#{SOLR_PATH}/solr/data/#{ENV['RAILS_ENV']}")
-      Dir[ SOLR_PATH + "/solr/data/#{ENV['RAILS_ENV']}/index/*"].each{|f| File.unlink(f)}
-      Dir.rmdir(SOLR_PATH + "/solr/data/#{ENV['RAILS_ENV']}/index")
+    if File.exists?("#{SOLR_DATA_PATH}")
+      Dir["#{SOLR_DATA_PATH}/index/*"].each{|f| File.unlink(f)}
+      Dir.rmdir("#{SOLR_DATA_PATH}/index")
       puts "Index files removed under " + ENV['RAILS_ENV'] + " environment"
     end
   end
