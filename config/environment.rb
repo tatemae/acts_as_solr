@@ -8,11 +8,9 @@ SOLR_PIDS_PATH = "#{rails_root_dir}/tmp/pids" unless defined? SOLR_PIDS_PATH
 SOLR_DATA_PATH = "#{rails_root_dir}/solr/#{ENV['RAILS_ENV']}" unless defined? SOLR_DATA_PATH
 
 unless defined? SOLR_PORT
-  SOLR_PORT = ENV['PORT'] || case ENV['RAILS_ENV']
-              when 'test' then 8981
-              when 'production' then 8983
-              else 8982
-              end
+  config = YAML::load_file(rails_root_dir+'/config/solr.yml')
+  
+  SOLR_PORT = ENV['PORT'] || URI.parse(config[ENV['RAILS_ENV']]['url']).port
 end
 
 if ENV['RAILS_ENV'] == 'test'
