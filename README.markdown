@@ -1,4 +1,4 @@
-`acts_as_solr Rails plugin`
+`acts_as_solr` Rails plugin
 ======
 This plugin adds full text search capabilities and many other nifty features from Apache's [Solr](http://lucene.apache.org/solr/) to any Rails model.
 It was based on the first draft by Erik Hatcher.
@@ -33,6 +33,23 @@ Basic Usage
 # Please see ActsAsSolr::ActsMethods for a complete info
 
 </code></pre>
+
+
+`acts_as_solr` in your tests
+======
+To test code that uses `acts_as_solr` you must start a Solr server for the test environment. You can do that with `rake solr:start RAILS_ENV=test`
+
+However, if you would like to mock out Solr calls so that a Solr server is not needed (and your tests will run much faster), just add this to your `test_helper.rb` or similar:
+
+<pre><code>
+class ActsAsSolr::Post
+  def self.execute(request)
+    true
+  end
+end
+</pre></code>
+
+([via](http://www.subelsky.com/2007/10/actsassolr-capistranhttpwwwbloggercomim.html#c1646308013209805416))
 
 Authors
 ======
