@@ -6,7 +6,7 @@ module ActsAsSolr #:nodoc:
     
     # Method used by mostly all the ClassMethods when doing a search
     def parse_query(query=nil, options={}, models=nil)
-      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator]
+      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include]
       query_options = {}
       return if query.nil?
       raise "Invalid parameters: #{(options.keys - valid_options).join(',')}" unless (options.keys - valid_options).empty?
@@ -68,7 +68,9 @@ module ActsAsSolr #:nodoc:
 
       ids = solr_data.docs.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
       conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
-      result = configuration[:format] == :objects ? reorder(self.find(:all, :conditions => conditions), ids) : ids
+      find_options = {:conditions => conditions}
+      find_options[:include] = options[:include] if options[:include]
+      result = configuration[:format] == :objects ? reorder(self.find(:all, find_options), ids) : ids
       add_scores(result, solr_data) if configuration[:format] == :objects && options[:scores]
       
       results.update(:facets => solr_data.data['facet_counts']) if options[:facets]
@@ -78,11 +80,11 @@ module ActsAsSolr #:nodoc:
     
     # Reorders the instances keeping the order returned from Solr
     def reorder(things, ids)
-      ordered_things = []
-      ids.each do |id|
-        record = things.find {|thing| record_id(thing).to_s == id.to_s} 
-        raise "Out of sync! The id #{id} is in the Solr index but missing in the database!" unless record
-        ordered_things << record
+      ordered_things = Array.new(things.size)
+      raise "Out of sync! Found #{ids.size} items in index, but only {things.size} were found in database!" unless things.size == ids.size
+      things.each do |thing|
+        position = ids.index(thing.id)
+        ordered_things[position] = thing
       end
       ordered_things
     end
