@@ -1,6 +1,14 @@
 == How to run unit tests for this plugin:
 To run the acts_as_solr's plugin tests run the following steps:
+
+- create a MySQL database called "actsassolr_test" (if you want to use MySQL)
+
+- create a new Rails project, if needed (the plugin can only be tested from within a Rails project); move/checkout acts_as_solr into its vendor/plugins/, as usual
+
+- copy vendor/plugins/acts_as_solr/config/solr.yml to config/ (the Rails config folder)
+
 - rake solr:start RAILS_ENV=test
+
 - rake (Accepts the following arguments: DB=sqlite|mysql and MYSQL_USER=user)
 
 == Troubleshooting:
