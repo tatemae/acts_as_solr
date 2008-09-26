@@ -85,7 +85,7 @@ module ActsAsSolr #:nodoc:
     # Reorders the instances keeping the order returned from Solr
     def reorder(things, ids)
       ordered_things = Array.new(things.size)
-      raise "Out of sync! Found #{ids.size} items in index, but only {things.size} were found in database!" unless things.size == ids.size
+      raise "Out of sync! Found #{ids.size} items in index, but only #{things.size} were found in database!" unless things.size == ids.size
       things.each do |thing|
         position = ids.index(thing.id)
         ordered_things[position] = thing

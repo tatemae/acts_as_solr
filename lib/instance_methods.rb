@@ -26,7 +26,6 @@ module ActsAsSolr #:nodoc:
 
     # remove from index
     def solr_destroy
-      return true if indexing_disabled?
       logger.debug "solr_destroy: #{self.class.name} : #{record_id(self)}"
       solr_delete solr_id
       solr_commit if configuration[:auto_commit]

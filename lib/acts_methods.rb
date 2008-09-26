@@ -93,7 +93,9 @@ module ActsAsSolr #:nodoc:
     #           want to update your index through some asynchronous mechanism. Will accept either a boolean or a block
     #           that will be evaluated before actually contacting the index for saving or destroying a document. Defaults
     #           to false. It doesn't refer to the mechanism of an offline index in general, but just to get a centralized point
-    #           where you can control indexing.
+    #           where you can control indexing. Note: This is only enabled for saving records. acts_as_solr doesn't always like
+    #           it, if you have a different number of results coming from the database and the index. This might be rectified in
+    #           another patch to support lazy loading.
     #
     #             class Electronic < ActiveRecord::Base
     #               acts_as_solr :offline => proc {|record| record.automatic_indexing_disabled?}
