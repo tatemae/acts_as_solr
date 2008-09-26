@@ -403,4 +403,9 @@ class ActsAsSolrTest < Test::Unit::TestCase
     assert_not_nil(results.query_time)
     assert_equal(results.query_time.class,Fixnum)
   end
+  
+  def test_should_not_index_the_record_when_offline_proc_return_true
+    gadget = Gadget.create(:name => "flipvideo mino")
+    assert_equal 0, Gadget.find_by_solr('flipvideo').total
+  end
 end

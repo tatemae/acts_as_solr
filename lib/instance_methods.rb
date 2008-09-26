@@ -9,8 +9,8 @@ module ActsAsSolr #:nodoc:
 
     # saves to the Solr index
     def solr_save
-      return true unless configuration[:if] 
-      if evaluate_condition(configuration[:if], self) 
+      return true if indexing_disabled?
+      if evaluate_condition(:if, self) 
         logger.debug "solr_save: #{self.class.name} : #{record_id(self)}"
         solr_add to_solr_doc
         solr_commit if configuration[:auto_commit]
@@ -20,8 +20,13 @@ module ActsAsSolr #:nodoc:
       end
     end
 
+    def indexing_disabled?
+      evaluate_condition(:offline, self) || !configuration[:if]
+    end
+
     # remove from index
     def solr_destroy
+      return true if indexing_disabled?
       logger.debug "solr_destroy: #{self.class.name} : #{record_id(self)}"
       solr_delete solr_id
       solr_commit if configuration[:auto_commit]
@@ -108,17 +113,20 @@ module ActsAsSolr #:nodoc:
       condition.respond_to?("call") && (condition.arity == 1 || condition.arity == -1)
     end
     
-    def evaluate_condition(condition, field)
+    def evaluate_condition(which_condition, field)
+      condition = configuration[which_condition]
       case condition
         when Symbol: field.send(condition)
         when String: eval(condition, binding)
+        when FalseClass: false
+        when TrueClass: true
         else
           if condition_block?(condition)
             condition.call(field)
           else
             raise(
               ArgumentError,
-              "The :if option has to be either a symbol, string (to be eval'ed), proc/method, or " +
+              "The :#{which_condition} option has to be either a symbol, string (to be eval'ed), proc/method, true/false, or " +
               "class implementing a static validation method"
             )
           end

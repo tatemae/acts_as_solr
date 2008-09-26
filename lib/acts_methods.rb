@@ -89,6 +89,16 @@ module ActsAsSolr #:nodoc:
     #          acts_as_solr :if => proc{|record| record.is_active?}
     #        end
     # 
+    # offline:: Assumes that your using an outside mechanism to explicitly trigger indexing records, e.g. you only
+    #           want to update your index through some asynchronous mechanism. Will accept either a boolean or a block
+    #           that will be evaluated before actually contacting the index for saving or destroying a document. Defaults
+    #           to false. It doesn't refer to the mechanism of an offline index in general, but just to get a centralized point
+    #           where you can control indexing.
+    #
+    #             class Electronic < ActiveRecord::Base
+    #               acts_as_solr :offline => proc {|record| record.automatic_indexing_disabled?}
+    #             end
+    #
     # auto_commit:: The commit command will be sent to Solr only if its value is set to true:
     # 
     #                 class Author < ActiveRecord::Base
@@ -113,7 +123,8 @@ module ActsAsSolr #:nodoc:
         :include => nil,
         :facets => nil,
         :boost => nil,
-        :if => "true"
+        :if => "true",
+        :offline => false
       }  
       self.solr_configuration = {
         :type_field => "type_s",
