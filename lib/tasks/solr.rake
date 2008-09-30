@@ -19,7 +19,8 @@ namespace :solr do
       Dir.chdir(SOLR_PATH) do
         pid = fork do
           #STDERR.close
-          exec "java -Dsolr.data.dir=#{SOLR_DATA_PATH} -Djetty.logs=#{SOLR_LOGS_PATH} -Djetty.port=#{SOLR_PORT} -jar start.jar"
+          puts SOLR_JVM_OPTIONS
+          exec "java #{SOLR_JVM_OPTIONS} -Dsolr.data.dir=#{SOLR_DATA_PATH} -Djetty.logs=#{SOLR_LOGS_PATH} -Djetty.port=#{SOLR_PORT} -jar start.jar"
         end
         sleep(5)
         File.open("#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid", "w"){ |f| f << pid}

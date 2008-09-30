@@ -13,6 +13,8 @@ unless defined? SOLR_PORT
   SOLR_PORT = ENV['PORT'] || URI.parse(config[ENV['RAILS_ENV']]['url']).port
 end
 
+SOLR_JVM_OPTIONS = config[ENV['RAILS_ENV']]['jvm_options'] unless defined? SOLR_JVM_OPTIONS
+
 if ENV['RAILS_ENV'] == 'test'
   DB = (ENV['DB'] ? ENV['DB'] : 'mysql') unless defined? DB
   MYSQL_USER = (ENV['MYSQL_USER'].nil? ? 'root' : ENV['MYSQL_USER']) unless defined? MYSQL_USER
