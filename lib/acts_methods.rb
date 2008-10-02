@@ -75,12 +75,22 @@ module ActsAsSolr #:nodoc:
     #             acts_as_solr :facets => [:category, :manufacturer]  
     #           end
     # 
-    # boost:: You can pass a boost (float) value that will be used to boost the document and/or a field:
+    # boost:: You can pass a boost (float) value that will be used to boost the document and/or a field. To specify a more
+    #         boost for the document, you can either pass a block or a symbol. The block will be called with the record
+    #         as an argument, a symbol will result in the according method being called:
     # 
     #           class Electronic < ActiveRecord::Base
     #             acts_as_solr :fields => [{:price => {:boost => 5.0}}], :boost => 10.0
     #           end
     # 
+    #           class Electronic < ActiveRecord::Base
+    #             acts_as_solr :fields => [{:price => {:boost => 5.0}}], :boost => proc {|record| record.id + 120*37}
+    #           end
+    #
+    #           class Electronic < ActiveRecord::Base
+    #             acts_as_solr :fields => [{:price => {:boost => :price_rating}}], :boost => 10.0
+    #           end
+    #
     # if:: Only indexes the record if the condition evaluated is true. The argument has to be 
     #      either a symbol, string (to be eval'ed), proc/method, or class implementing a static 
     #      validation method. It behaves the same way as ActiveRecord's :if option.

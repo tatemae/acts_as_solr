@@ -101,11 +101,19 @@ module ActsAsSolr #:nodoc:
     end
     
     def validate_boost(boost)
-      if boost.class != Float || boost < 0
-        logger.warn "The boost value has to be a float and posisive, but got #{boost}. Using default boost value."
-        return solr_configuration[:default_boost]
+      boost_value = case boost
+      when Float:
+        return solr_configuration[:default_boost] if boost < 0
+        boost
+      when Proc:
+        boost.call(self)
+      when Symbol:
+        if self.respond_to?(boost)
+          self.send(boost)
+        end
       end
-      boost
+      
+      boost_value || solr_configuration[:default_boost]
     end
     
     def condition_block?(condition)
