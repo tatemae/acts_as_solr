@@ -66,11 +66,11 @@ module ActsAsSolr #:nodoc:
         :format => :objects
       }
       results.update(:facets => {'facet_fields' => []}) if options[:facets]
-      return SearchResults.new(results) if solr_data.total == 0
+      return SearchResults.new(results) if solr_data.total_hits == 0
       
       configuration.update(options) if options.is_a?(Hash)
 
-      ids = solr_data.docs.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
+      ids = solr_data.hits.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
       conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
       find_options = {:conditions => conditions}
       find_options[:include] = options[:include] if options[:include]
@@ -78,7 +78,7 @@ module ActsAsSolr #:nodoc:
       add_scores(result, solr_data) if configuration[:format] == :objects && options[:scores]
       
       results.update(:facets => solr_data.data['facet_counts']) if options[:facets]
-      results.update({:docs => result, :total => solr_data.total, :max_score => solr_data.max_score, :query_time => solr_data.data['responseHeader']['QTime']})
+      results.update({:docs => result, :total => solr_data.total_hits, :max_score => solr_data.max_score, :query_time => solr_data.data['responseHeader']['QTime']})
       SearchResults.new(results)
     end
     
@@ -109,7 +109,7 @@ module ActsAsSolr #:nodoc:
     # Adds the score to each one of the instances found
     def add_scores(results, solr_data)
       with_score = []
-      solr_data.docs.each do |doc|
+      solr_data.hits.each do |doc|
         with_score.push([doc["score"], 
           results.find {|record| record_id(record).to_s == doc["#{solr_configuration[:primary_key_field]}"].to_s }])
       end

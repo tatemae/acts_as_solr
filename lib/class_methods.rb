@@ -95,14 +95,14 @@ module ActsAsSolr #:nodoc:
       data = parse_query(query, options, models<<")")
       result = []
       if data
-        docs = data.docs
-        return SearchResults.new(:docs => [], :total => 0) if data.total == 0
+        docs = data.hits
+        return SearchResults.new(:docs => [], :total => 0) if data.total_hits == 0
         if options[:results_format] == :objects
           docs.each{|doc| k = doc.fetch('id').to_s.split(':'); result << k[0].constantize.find_by_id(k[1])}
         elsif options[:results_format] == :ids
           docs.each{|doc| result << {"id"=>doc.values.pop.to_s}}
         end
-        SearchResults.new :docs => result, :total => data.total
+        SearchResults.new :docs => result, :total => data.total_hits
       end
     end
     

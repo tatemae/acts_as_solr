@@ -54,9 +54,9 @@ class FacetedSearchTest < Test::Unit::TestCase
                                                                           "price:[500.00 TO *]"]}
     assert_equal 4, records.docs.size
     assert_equal({"facet_queries" => {"price_rf:[* TO 200.00]"=>2,
-                                      "price_rf:[500.00 TO *]"=>1,
-                                      "price_rf:[200.00 TO 500.00]"=>1}, 
-                  "facet_fields" => {}}, records.facets)
+                                      "price_rf:[200.00 TO 500.00]"=>1,
+                                      "price_rf:[500.00 TO *]"=>1}, 
+                  "facet_fields" => {}, "facet_dates" => {}}, records.facets)
   end
   
   # Faceted search specifying the query and fields
