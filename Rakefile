@@ -7,23 +7,14 @@ Dir["#{File.dirname(__FILE__)}/lib/tasks/**/*.rake"].sort.each { |ext| load ext 
 desc "Default Task"
 task :default => [:test]
 
-desc 'Runs the tests'
-task :test do
-  ENV['RAILS_ENV'] = "test"
-  require File.dirname(__FILE__) + '/config/environment'
-  puts "Using " + DB
-  %x(mysql -u#{MYSQL_USER} < #{File.dirname(__FILE__) + "/test/fixtures/db_definitions/mysql.sql"}) if DB == 'mysql'
-  
-  Rake::Task["test:migrate"].invoke
-  Rake::Task[:test_units].invoke
-end
+desc "Runs the unit tests"
+task :test => "test:unit"
 
-desc "Unit Tests"
- Rake::TestTask.new('test_units') do |t|
-  t.pattern = "test/unit/*_test.rb"
+desc "Functional Tests"
+Rake::TestTask.new('test_functionals') do |t|
+  t.pattern = "test/functional/*_test.rb"
   t.verbose = true
 end
-
 
 namespace :test do
   desc 'Measures test coverage using rcov'
@@ -41,5 +32,23 @@ namespace :test do
     
     system("#{rcov} --html #{Dir.glob('test/**/*_test.rb').join(' ')}")
     system("open coverage/index.html") if PLATFORM['darwin']
+  end
+  
+  desc 'Runs the functional tests, testing integration with Solr'
+  task :functional do
+    ENV['RAILS_ENV'] = "test"
+    require File.dirname(__FILE__) + '/config/environment'
+    puts "Using " + DB
+    %x(mysql -u#{MYSQL_USER} < #{File.dirname(__FILE__) + "/test/fixtures/db_definitions/mysql.sql"}) if DB == 'mysql'
+
+    Rake::Task["test:migrate"].invoke
+    Rake::Task["test_functionals"].invoke
+  end
+  
+  desc "Unit tests"
+  Rake::TestTask.new(:unit) do |t|
+    t.libs << 'unit'
+    t.pattern = "test/unit/*_test.rb"
+    t.verbose = true
   end
 end
