@@ -125,7 +125,7 @@ module ActsAsSolr #:nodoc:
       case condition
         when Symbol: field.send(condition)
         when String: eval(condition, binding)
-        when FalseClass: false
+        when FalseClass, NilClass: false
         when TrueClass: true
         else
           if condition_block?(condition)
