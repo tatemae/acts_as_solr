@@ -1,11 +1,16 @@
 require 'test_helper'
 require 'instance_methods'
+require 'logger'
 
 class InstanceMethodsTest < Test::Unit::TestCase
   include ActsAsSolr::InstanceMethods
 
   attr_accessor :configuration, :solr_configuration
-
+  
+  def logger
+    @logger ||= Logger.new(STDOUT)
+  end
+  
   def record_id(obj)
     10
   end
@@ -16,6 +21,10 @@ class InstanceMethodsTest < Test::Unit::TestCase
   
   def irate
     8.0
+  end
+
+  def solr_name
+    @solr_name
   end
   
   context "when checking whether indexing is disabled" do
@@ -76,6 +85,51 @@ class InstanceMethodsTest < Test::Unit::TestCase
   context "when determining the solr document id" do
     should "combine class name and id" do
       assert_equal "InstanceMethodsTest:10", solr_id
+    end
+  end
+  
+  context "when saving the instance to solr" do
+    context "with indexing disabled" do
+      setup do
+        @configuration = {:fields => [:name], :if => nil}
+      end
+  
+      should "just return and do nothing" do
+        self.expects(:solr_add).never
+        self.expects(:solr_destroy).never
+        assert solr_save
+      end
+    end
+    
+    context "with indexing enabled" do
+      setup do
+        @configuration = {:fields => [:name], :if => "true", :auto_commit => true}
+        self.stubs(:solr_commit)
+        self.stubs(:solr_add)
+        self.stubs(:to_solr_doc).returns("My test document")
+      end
+
+      should "add the solr document" do
+        self.expects(:solr_add).with("My test document").once
+        solr_save
+      end
+      
+      should "commit to solr" do
+        self.expects(:solr_commit).once
+        solr_save
+      end
+      
+      should "not commit if auto_commit is disabled" do
+        @configuration.merge!(:auto_commit => false)
+        self.expects(:solr_commit).never
+        solr_save
+      end
+      
+      should "destroy the document if :if clause is false" do
+        @configuration.merge!(:if => "false")
+        self.expects(:solr_destroy).once
+        solr_save
+      end
     end
   end
 end
