@@ -72,8 +72,7 @@ module ActsAsSolr #:nodoc:
       end
       
       add_includes(doc) if configuration[:include]
-      logger.debug doc.to_xml.to_s
-      return doc
+      doc
     end
     
     private

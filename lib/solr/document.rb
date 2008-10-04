@@ -72,5 +72,7 @@ class Solr::Document
     return e
   end
 
-  delegate :each, :to => :fields
+  def each(*args, &blk)
+    fields.each(&blk)
+  end
 end
