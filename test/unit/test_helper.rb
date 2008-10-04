@@ -1,3 +1,5 @@
 require 'rubygems'
-require 'Shoulda'
+gem 'thoughtbot-shoulda'
+require 'shoulda'
 require 'test/unit'
+require 'mocha'

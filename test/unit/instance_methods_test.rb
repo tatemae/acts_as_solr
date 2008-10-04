@@ -3,7 +3,12 @@ require 'instance_methods'
 
 class InstanceMethodsTest < Test::Unit::TestCase
   include ActsAsSolr::InstanceMethods
+
   attr_accessor :configuration, :solr_configuration
+
+  def record_id(obj)
+    10
+  end
   
   def boost_rate
     10.0
@@ -65,6 +70,12 @@ class InstanceMethodsTest < Test::Unit::TestCase
     should "return the default boost when there is no valid boost" do
       configuration[:boost] = "boost!"
       assert_equal 10.0, validate_boost(configuration[:boost])
+    end
+  end
+  
+  context "when determining the solr document id" do
+    should "combine class name and id" do
+      assert_equal "InstanceMethodsTest:10", solr_id
     end
   end
 end
