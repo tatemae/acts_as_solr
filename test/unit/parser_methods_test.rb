@@ -1,6 +1,13 @@
 require 'test_helper'
 require 'parser_methods'
 require 'search_results'
+require 'deprecation'
+module Solr; module Request; end; end
+require 'solr/request/base'
+require 'solr/request/select'
+require 'solr/request/standard'
+
+class ActsAsSolr::Post; end
 
 class ParserMethodsTest < Test::Unit::TestCase
   include ActsAsSolr::ParserMethods
@@ -39,7 +46,7 @@ class ParserMethodsTest < Test::Unit::TestCase
       @results.stubs(:data).returns({"responseHeader" => {"QTime" => "10.2"}, "facet_counts" => 2})
       assert_equal 2, parse_results(@results, :facets => true).facets
     end
-    
+
     context "when the format requests objects" do
       setup do
         @configuration = {:format => :objects}
@@ -94,13 +101,20 @@ class ParserMethodsTest < Test::Unit::TestCase
         assert_equal [], parse_results(@results).docs
       end
     end
+    
+    context "with the scores option" do
+      setup do
+      end
+      
+      should "add the scores" do
+        expects(:add_scores).with([], @results)
+        parse_results(@results, :scores => true)
+      end
+    end
+    
   end
   
   context "when reordering results" do
-    setup do
-      
-    end
-
     should "raise an error if arguments don't have the same number of elements" do
       assert_raise(RuntimeError) {reorder([], [1])}
     end
@@ -117,5 +131,78 @@ class ParserMethodsTest < Test::Unit::TestCase
       assert_equal [1, 3, 5], reordered.collect{|thing| thing.id}
     end
   end
-  
+
+  context "When parsing a query" do
+    setup do
+      ActsAsSolr::Post.stubs(:execute)
+      stubs(:solr_type_condition).returns "(type:ParserMethodsTest)"
+      @solr_configuration = {:primary_key_field => "id"}
+      @configuration = {:solr_fields => nil}
+    end
+    
+    should "set the limit and offset" do
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        10 == request.to_hash[:rows]
+        20 == request.to_hash[:start]
+      }
+      parse_query "", :limit => 10, :offset => 20
+    end
+    
+    should "set the operator" do
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        "OR" == request.to_hash["q.op"]
+      }
+      parse_query "", :operator => :or
+    end
+    
+    should "not execute anything if the query is empty" do
+      ActsAsSolr::Post.expects(:execute).never
+      parse_query(nil)
+    end
+    
+    should "raise an error if invalid options where specified" do
+      assert_raise(RuntimeError) {parse_query "", :invalid => true}
+    end
+    
+    should "add the type" do
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        request.to_hash[:q].include?("(type:ParserMethodsTest)")
+      }
+      parse_query ""
+    end
+    
+    should "append the field types for the specified fields" do
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        request.to_hash[:q].include?("(username_t:Chunky)")
+      }
+      parse_query "username:Chunky"
+    end
+    
+    should "replace the field types" do
+      expects(:replace_types).returns(["active_i:1"])
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        request.to_hash[:q].include?("active_i:1")
+      }
+      parse_query "active:1"
+    end
+    
+    should "add score and primary key to field list" do
+      ActsAsSolr::Post.expects(:execute).with {|request|
+        request.to_hash[:fl] == ('id,score')
+      }
+      parse_query ""
+    end
+    
+    context "with the order option" do
+      should "add the order criteria to the query" do
+        ActsAsSolr::Post.expects(:execute).with {|request|
+          request.to_hash[:q].include?(";active_t desc")
+        }
+        parse_query "active:1", :order => "active desc"
+      end
+    end
+    
+    context "with facets" do
+    end
+  end
 end
