@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'parser_methods'
+require 'common_methods'
 require 'search_results'
 require 'deprecation'
 module Solr; module Request; end; end
@@ -11,6 +12,8 @@ class ActsAsSolr::Post; end
 
 class ParserMethodsTest < Test::Unit::TestCase
   include ActsAsSolr::ParserMethods
+  include ActsAsSolr::CommonMethods
+  
   attr_accessor :configuration, :solr_configuration
   
   def table_name
@@ -203,6 +206,46 @@ class ParserMethodsTest < Test::Unit::TestCase
     end
     
     context "with facets" do
+    end
+  end
+  
+  context "When setting the field types" do
+    setup do
+      @configuration = {:solr_fields => {:name => {:type => :string},
+                                        :age => {:type => :integer}}}
+    end
+    
+    should "replace the _t suffix with the real type" do
+      assert_equal ["name_s:Chunky AND age_i:21"], replace_types(["name_t:Chunky AND age_t:21"])
+    end
+    
+    context "with a suffix" do
+      should "not include the colon when false" do
+        assert_equal ["name_s"], replace_types(["name_t"], false)
+      end
+      
+      should "include the colon by default" do
+        assert_equal ["name_s:Chunky"], replace_types(["name_t:Chunky"])
+      end
+    end
+  end
+  
+  context "When adding scores" do
+    setup do
+      @solr_data = stub(:results)
+      @solr_data.stubs(:total_hits).returns(1)
+      @solr_data.stubs(:hits).returns([{"id" => 2, "score" => 2.546}])
+      @solr_data.stubs(:max_score).returns 2.1
+      
+      @results = [Array.new]
+      
+      stubs(:record_id).returns(2)
+      
+      @solr_configuration = {:primary_key_field => "id"}
+    end
+    
+    should "add the score to the result document" do
+      assert_equal 2.546, add_scores(@results, @solr_data).first.last.solr_score
     end
   end
 end
