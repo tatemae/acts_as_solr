@@ -71,15 +71,23 @@ module ActsAsSolr #:nodoc:
       configuration.update(options) if options.is_a?(Hash)
 
       ids = solr_data.hits.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
-      conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
-      find_options = {:conditions => conditions}
-      find_options[:include] = options[:include] if options[:include]
-      result = configuration[:format] == :objects ? reorder(self.find(:all, find_options), ids) : ids
+      
+      result = find_objects(ids, options, configuration)
+      
       add_scores(result, solr_data) if configuration[:format] == :objects && options[:scores]
       
       results.update(:facets => solr_data.data['facet_counts']) if options[:facets]
       results.update({:docs => result, :total => solr_data.total_hits, :max_score => solr_data.max_score, :query_time => solr_data.data['responseHeader']['QTime']})
       SearchResults.new(results)
+    end
+    
+    
+    def find_objects(ids, options, configuration)
+      conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
+      find_options = {:conditions => conditions}
+      find_options[:include] = options[:include] if options[:include]
+      result = configuration[:format] == :objects ? reorder(self.find(:all, find_options), ids) : ids
+      result
     end
     
     # Reorders the instances keeping the order returned from Solr
