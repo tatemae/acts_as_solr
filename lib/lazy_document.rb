@@ -1,6 +1,6 @@
 module ActsAsSolr
   class LazyDocument
-    attr_reader :id
+    attr_reader :id, :clazz
     
     def initialize(id, clazz)
       @id = id

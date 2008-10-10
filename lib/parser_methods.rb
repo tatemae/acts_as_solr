@@ -83,10 +83,17 @@ module ActsAsSolr #:nodoc:
     
     
     def find_objects(ids, options, configuration)
-      conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
-      find_options = {:conditions => conditions}
-      find_options[:include] = options[:include] if options[:include]
-      result = configuration[:format] == :objects ? reorder(self.find(:all, find_options), ids) : ids
+      result = if configuration[:format] == :objects
+        conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
+        find_options = {:conditions => conditions}
+        find_options[:include] = options[:include] if options[:include]
+        result = reorder(self.find(:all, find_options), ids)
+      elsif configuration[:format] == :lazy
+        ids.collect {|id| ActsAsSolr::LazyDocument.new(id, self)}
+      else
+        ids
+      end
+        
       result
     end
     

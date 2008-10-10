@@ -8,6 +8,7 @@ require 'solr/request/base'
 require 'solr/request/select'
 require 'solr/request/standard'
 require 'parser_instance'
+require 'lazy_document'
 
 class ActsAsSolr::Post; end
 
@@ -101,7 +102,29 @@ class ParserMethodsTest < Test::Unit::TestCase
           @parser.parse_results(@results, :scores => true)
         end
       end
-    
+      
+      context "with lazy format" do
+        setup do
+          @parser.solr_configuration = {:primary_key_field => :pk_id}
+          @results.stubs(:hits).returns([{"pk_id" => 1}, {"pk_id" => 2}])
+        end
+        
+        should "create LazyDocuments for the resulting docs" do
+          result = @parser.parse_results(@results, :format => :lazy)
+          assert_equal ActsAsSolr::LazyDocument, result.results.first.class
+        end
+        
+        should "set the document id as the record id" do
+          result = @parser.parse_results(@results, :format => :lazy)
+          assert_equal 1, result.results.first.id
+        end
+        
+        should "set the document class" do
+          result = @parser.parse_results(@results, :format => :lazy)
+          assert_equal ActsAsSolr::ParserInstance, result.results.first.clazz.class
+        end
+      end
+      
     end
   
     context "when reordering results" do
