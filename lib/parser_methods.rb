@@ -4,7 +4,7 @@ module ActsAsSolr #:nodoc:
     
     # Method used by mostly all the ClassMethods when doing a search
     def parse_query(query=nil, options={}, models=nil)
-      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include]
+      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include, :lazy]
       query_options = {}
       return if query.nil?
       raise "Invalid parameters: #{(options.keys - valid_options).join(',')}" unless (options.keys - valid_options).empty?
@@ -83,13 +83,13 @@ module ActsAsSolr #:nodoc:
     
     
     def find_objects(ids, options, configuration)
-      result = if configuration[:format] == :objects
+      result = if configuration[:lazy]
+        ids.collect {|id| ActsAsSolr::LazyDocument.new(id, self)}
+      elsif configuration[:format] == :objects
         conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
         find_options = {:conditions => conditions}
         find_options[:include] = options[:include] if options[:include]
         result = reorder(self.find(:all, find_options), ids)
-      elsif configuration[:format] == :lazy
-        ids.collect {|id| ActsAsSolr::LazyDocument.new(id, self)}
       else
         ids
       end

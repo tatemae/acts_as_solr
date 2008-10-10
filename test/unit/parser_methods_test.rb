@@ -110,17 +110,17 @@ class ParserMethodsTest < Test::Unit::TestCase
         end
         
         should "create LazyDocuments for the resulting docs" do
-          result = @parser.parse_results(@results, :format => :lazy)
+          result = @parser.parse_results(@results, :lazy => true)
           assert_equal ActsAsSolr::LazyDocument, result.results.first.class
         end
         
         should "set the document id as the record id" do
-          result = @parser.parse_results(@results, :format => :lazy)
+          result = @parser.parse_results(@results, :lazy => true)
           assert_equal 1, result.results.first.id
         end
         
         should "set the document class" do
-          result = @parser.parse_results(@results, :format => :lazy)
+          result = @parser.parse_results(@results, :lazy => true)
           assert_equal ActsAsSolr::ParserInstance, result.results.first.clazz.class
         end
       end
