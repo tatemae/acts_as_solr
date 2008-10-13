@@ -83,7 +83,7 @@ module ActsAsSolr #:nodoc:
     
     
     def find_objects(ids, options, configuration)
-      result = if configuration[:lazy]
+      result = if configuration[:lazy] && configuration[:format] != :ids
         ids.collect {|id| ActsAsSolr::LazyDocument.new(id, self)}
       elsif configuration[:format] == :objects
         conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]

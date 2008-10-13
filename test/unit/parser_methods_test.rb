@@ -79,6 +79,11 @@ class ParserMethodsTest < Test::Unit::TestCase
           @results.stubs(:hits).returns([{"pk_id" => 1}, {"pk_id" => 2}])
           assert_equal [1, 2], @parser.parse_results(@results, :format => nil).docs
         end
+        
+        should "ignore the :lazy option" do
+          @results.stubs(:hits).returns([{"pk_id" => 1}, {"pk_id" => 2}])
+          assert_equal [1, 2], @parser.parse_results(@results, :format => :ids, :lazy => true).docs
+        end
       end
     
       context "with an empty result set" do
