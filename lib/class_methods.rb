@@ -60,6 +60,10 @@ module ActsAsSolr #:nodoc:
     #            books.records.last.solr_score
     #            => 0.12321548
     # 
+    # lazy:: If set to true the search will return objects that will touch the database when you ask for one
+    #        of their attributes for the first time. Useful when you're using fragment caching based solely on
+    #        types and ids.
+    #
     def find_by_solr(query, options={})
       data = parse_query(query, options)
       return parse_results(data, options) if data
