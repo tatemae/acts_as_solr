@@ -16,7 +16,7 @@ end
 SOLR_JVM_OPTIONS = config[ENV['RAILS_ENV']]['jvm_options'] unless defined? SOLR_JVM_OPTIONS
 
 if ENV['RAILS_ENV'] == 'test'
-  DB = (ENV['DB'] ? ENV['DB'] : 'mysql') unless defined? DB
+  DB = (ENV['DB'] ? ENV['DB'] : 'mysql') unless defined?(DB)
   MYSQL_USER = (ENV['MYSQL_USER'].nil? ? 'root' : ENV['MYSQL_USER']) unless defined? MYSQL_USER
   require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'test', 'db', 'connections', DB, 'connection.rb')
 end

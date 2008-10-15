@@ -123,10 +123,14 @@ module ActsAsSolr #:nodoc:
     def evaluate_condition(which_condition, field)
       condition = configuration[which_condition]
       case condition
-        when Symbol: field.send(condition)
-        when String: eval(condition, binding)
-        when FalseClass, NilClass: false
-        when TrueClass: true
+        when Symbol
+          field.send(condition)
+        when String
+          eval(condition, binding)
+        when FalseClass, NilClass
+          false
+        when TrueClass
+          true
         else
           if condition_block?(condition)
             condition.call(field)

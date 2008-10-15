@@ -171,7 +171,7 @@ module ActsAsSolr #:nodoc:
           value = self[field_name] || self.instance_variable_get("@#{field_name.to_s}".to_sym) || self.send(field_name.to_sym)
           case options[:type] 
             # format dates properly; return nil for nil dates 
-            when :date: value ? value.utc.strftime("%Y-%m-%dT%H:%M:%SZ") : nil 
+            when :date then value ? value.utc.strftime("%Y-%m-%dT%H:%M:%SZ") : nil 
             else value
           end
         rescue

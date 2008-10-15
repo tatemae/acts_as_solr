@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "#{File.dirname(File.expand_path(__FILE__))}/../test_helper"
 
 class ActsAsSolrTest < Test::Unit::TestCase
