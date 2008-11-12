@@ -79,7 +79,7 @@ class CommonMethodsTest < Test::Unit::TestCase
       assert_equal 0, set_value_if_nil(:integer)
       assert_equal 0, set_value_if_nil(:range_integer)
       assert_equal 0, set_value_if_nil("i")
-      assert_equal 0, set_value_if_nil("ri")   
+      assert_equal 0, set_value_if_nil("ri")
     end
     
     should "return false for a boolean" do

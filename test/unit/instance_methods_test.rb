@@ -38,7 +38,7 @@ class InstanceMethodsTest < Test::Unit::TestCase
       end
     end
 
-    context "when validating boost" do
+    context "when validating the boost" do
       setup do
         @instance.solr_configuration = {:default_boost => 10.0}
         @instance.configuration = {:if => true}
@@ -142,6 +142,14 @@ class InstanceMethodsTest < Test::Unit::TestCase
         @instance.configuration.merge!(:auto_commit => false)
         @instance.expects(:solr_commit).never
         @instance.solr_destroy
+      end
+      
+      context "with indexing disabled" do
+        should "not contact solr" do
+          @instance.configuration.merge!(:offline => true, :if => nil)
+          @instance.expects(:solr_delete).never
+          @instance.solr_destroy
+        end
       end
     end
   
