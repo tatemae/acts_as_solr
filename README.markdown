@@ -14,9 +14,31 @@ Please refer to the CHANGE_LOG
 Installation
 ======
 
+For Rails >= 2.1:
+
+    script/plugin install git://github.com/mattmatt/acts_as_solr.git
+
+For Rails < 2.1:
+
+    cd vendor/plugins
+    git clone git://github.com/mattmatt/acts_as_solr.git
+    rm -rf acts_as_solr/.git
+
+Make sure you copy `vendor/plugins/acts_as_solr/config/solr.yml` to your Rails
+application's config directory, when you install via `git clone`.
+
 Requirements
 ------
 * Java Runtime Environment(JRE) 1.5 aka 5.0 [http://www.java.com/en/download/index.jsp](http://www.java.com/en/download/index.jsp)
+* If you have libxml-ruby installed, make sure it's at least version 0.7
+
+Configuration
+======
+Basically everything is configured to work out of the box. You can use `rake solr:start` and `rake solr:stop`
+to start and stop the Solr web server (an embedded Jetty). If the default JVM options aren't suitable for
+your environment, you can configure them in solr.yml with the option `jvm_options`. There is a default
+set for the production environment to have some more memory available for the JVM than the defaults, but
+feel free to change them to your liking.
 
 Basic Usage
 ======
