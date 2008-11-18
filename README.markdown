@@ -54,7 +54,9 @@ end
 Authors
 ======
 Erik Hatcher: First draft<br>
-Thiago Jackiw: Current developer (tjackiw at gmail dot com)
+Thiago Jackiw: Previous developer<br>
+Luke Francl: Current developer<br>
+Mathias Meyer: Current developer<br>
 
 Release Information
 ======
@@ -62,4 +64,4 @@ Released under the MIT license.
 
 More info
 ======
-[http://acts-as-solr.railsfreaks.com](http://acts-as-solr.railsfreaks.com)
+The old [acts_as_solr homepage](http://acts-as-solr.railsfreaks.com) is no more. For more up-to-date information, check out the project page of the current mainline on [GitHub](http://github.com/mattmatt/acts_as_solr/wikis).
