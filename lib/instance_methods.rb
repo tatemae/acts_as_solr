@@ -102,12 +102,12 @@ module ActsAsSolr #:nodoc:
     
     def validate_boost(boost)
       boost_value = case boost
-      when Float:
+      when Float
         return solr_configuration[:default_boost] if boost < 0
         boost
-      when Proc:
+      when Proc
         boost.call(self)
-      when Symbol:
+      when Symbol
         if self.respond_to?(boost)
           self.send(boost)
         end
