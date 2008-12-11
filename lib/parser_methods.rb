@@ -117,8 +117,18 @@ module ActsAsSolr #:nodoc:
       suffix = include_colon ? ":" : ""
       if configuration[:solr_fields]
         configuration[:solr_fields].each do |name, options|
-          field = "#{name.to_s}_#{get_solr_field_type(options[:type])}#{suffix}"
-          strings.each_with_index {|s,i| strings[i] = s.gsub(/#{name.to_s}_t#{suffix}/,field) }
+          solr_name = options[:as] || name.to_s
+          solr_type = get_solr_field_type(options[:type])
+          field = "#{solr_name}_#{solr_type}#{suffix}"
+          strings.each_with_index {|s,i| strings[i] = s.gsub(/#{solr_name.to_s}_t#{suffix}/,field) }
+        end
+      end
+      if configuration[:solr_includes]
+        configuration[:solr_includes].each do |association, options|
+          solr_name = options[:as] || association.to_s.singularize
+          solr_type = get_solr_field_type(options[:type])
+          field = "#{solr_name}_#{solr_type}#{suffix}"
+          strings.each_with_index {|s,i| strings[i] = s.gsub(/#{solr_name.to_s}_t#{suffix}/,field) }
         end
       end
       strings

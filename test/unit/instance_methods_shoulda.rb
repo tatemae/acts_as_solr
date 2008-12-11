@@ -7,6 +7,7 @@ require 'solr/field'
 require 'solr/document'
 require 'solr_instance'
 require 'erb'
+require 'ostruct'
 
 class InstanceMethodsTest < Test::Unit::TestCase
 
@@ -219,6 +220,105 @@ class InstanceMethodsTest < Test::Unit::TestCase
         should "escape the contents" do
           @instance.name = "<script>malicious()</script>"
           assert_equal "&lt;script&gt;malicious()&lt;/script&gt;", @instance.to_solr_doc[:name_s]
+        end
+
+        should "use an alternate field name if specified in options" do
+          @instance.stubs(:nickname_for_solr).returns('Nick')
+          @instance.configuration[:solr_fields].merge! :nickname => {:as => :alias}
+          doc = @instance.to_solr_doc
+          assert_not_nil @instance.to_solr_doc.fields.find {|f| f.name.to_s == "alias_s"}
+          assert_nil     @instance.to_solr_doc.fields.find {|f| f.name.to_s == "nickname_s"}
+        end
+
+        context "when associations are included" do
+          setup do
+            class AssocLabel < String
+              @@singular = {'people' => 'person'}
+              def to_s
+                self
+              end
+              def singularize
+                @@singular[self]
+              end
+            end
+            @assoc = AssocLabel.new('people')
+            person = {:name => 'Hank Venture', :address => 'Venture Compound'}
+            @people = [OpenStruct.new(person.merge(:attributes => person))]
+            @instance.stubs(:people).returns(@people)
+            @reflection = OpenStruct.new(:macro => :has_many)
+            @instance.class.stubs(:reflect_on_association).returns(@reflection)
+            @instance.configuration[:solr_includes] = {@assoc => {}}
+            @instance.solr_configuration.merge! :default_boost => 35.0
+          end
+
+          should "set the default name for the include, if none is configured" do
+            @instance.configuration[:solr_includes] = {@assoc => {:type => :text}}
+            doc = @instance.to_solr_doc
+            assert_not_nil doc.fields.find {|f| f.name.to_s == "person_s"}
+          end
+
+          should "add the include alias" do
+            @instance.configuration[:solr_includes] = {@assoc => {:as => :human, :type => :text}}
+            doc = @instance.to_solr_doc
+            assert_not_nil doc.fields.find {|f| f.name.to_s == "human_s"}
+            assert_nil     doc.fields.find {|f| f.name.to_s == "person_s"}
+          end
+
+          should "add the include type" do
+            @instance.configuration[:solr_includes] = {@assoc => {:type => :date}}
+            @instance.expects(:get_solr_field_type).with(){|v| true}.at_least_once.returns('s')
+            @instance.expects(:get_solr_field_type).with(:date).once.returns('d')
+            doc = @instance.to_solr_doc
+          end
+
+          should "set the default boost for the include, if none is configured" do
+            # @instance.configuration[:solr_includes] = {@assoc => {}}
+            field = @instance.to_solr_doc.fields.find {|f| f.name.to_s == "person_s"}
+            assert_equal 35.0, field.boost
+          end
+
+          should "add the include boost" do
+            @instance.configuration[:solr_includes] = {@assoc => {:boost => 10.0}}
+            field = @instance.to_solr_doc.fields.find {|f| f.name.to_s == "person_s"}
+            assert_equal 10.0, field.boost
+          end
+
+          should "default to a field value with all association attributes" do
+            # @instance.configuration[:solr_includes] = {@assoc => {}}
+            field = @instance.to_solr_doc.fields.find {|f| f.name.to_s == "person_s"}
+            @people.first.attributes.each do |attr, value|
+              assert_match /#{attr}=#{value}/, field.value
+            end
+          end
+
+          should "use a field value from an association method, if one is configured" do
+            @instance.configuration[:solr_includes] = {@assoc => {:using => :name}}
+            field = @instance.to_solr_doc.fields.find {|f| f.name.to_s == "person_s"}
+            assert_equal @people.first.name, field.value
+          end
+
+          should "use a field value from a proc, if one is configured" do
+            @instance.configuration[:solr_includes] = {@assoc => {:using => lambda{|r| r.name.reverse}}}
+            field = @instance.to_solr_doc.fields.find {|f| f.name.to_s == "person_s"}
+            assert_equal @people.first.name.reverse, field.value
+          end
+
+          should "join multiple values into a single field unless the :multivalued options is specified" do
+            @instance.configuration[:solr_includes] = {@assoc => {:multivalued => :true}}
+            second_person = {:name => 'Dean Venture', :address => 'Venture Compound'}
+            @people << OpenStruct.new(second_person.merge(:attributes => second_person))
+            fields = @instance.to_solr_doc.fields.select {|f| f.name.to_s == "person_s"}
+            assert_equal @people.size, fields.size
+          end
+
+          should "include multiple values separately if the :multivalued options is specified"    do
+            # @instance.configuration[:solr_includes] = {@assoc => {}}
+            second_person = {:name => 'Dean Venture', :address => 'Venture Compound'}
+            @people << OpenStruct.new(second_person.merge(:attributes => second_person))
+            fields = @instance.to_solr_doc.fields.select {|f| f.name.to_s == "person_s"}
+            assert_not_equal @people.size, fields.size
+            assert_equal 1, fields.size
+          end
         end
       end
     end
