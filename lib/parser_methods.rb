@@ -6,7 +6,9 @@ module ActsAsSolr #:nodoc:
     def parse_query(query=nil, options={}, models=nil)
       valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include, :lazy]
       query_options = {}
-      return if query.nil?
+
+      return nil if (query.nil? || query.strip == '')
+
       raise "Invalid parameters: #{(options.keys - valid_options).join(',')}" unless (options.keys - valid_options).empty?
       begin
         Deprecation.validate_query(options)
@@ -62,11 +64,12 @@ module ActsAsSolr #:nodoc:
         :docs => [],
         :total => 0
       }
+      
       configuration = {
         :format => :objects
       }
       results.update(:facets => {'facet_fields' => []}) if options[:facets]
-      return SearchResults.new(results) if solr_data.total_hits == 0
+      return SearchResults.new(results) if (solr_data.nil? || solr_data.total_hits == 0)
       
       configuration.update(options) if options.is_a?(Hash)
 

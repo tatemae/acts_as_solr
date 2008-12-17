@@ -100,6 +100,12 @@ class ParserMethodsTest < Test::Unit::TestCase
           assert_equal [], @parser.parse_results(@results).docs
         end
       end
+      
+      context "with a nil result set" do
+        should "return an empty search results set" do
+          assert_equal 0, @parser.parse_results(nil).total
+        end
+      end
     
       context "with the scores option" do
         should "add the scores" do
@@ -163,30 +169,35 @@ class ParserMethodsTest < Test::Unit::TestCase
           10 == request.to_hash[:rows]
           20 == request.to_hash[:start]
         }
-        @parser.parse_query "", :limit => 10, :offset => 20
+        @parser.parse_query "foo", :limit => 10, :offset => 20
       end
     
       should "set the operator" do
         ActsAsSolr::Post.expects(:execute).with {|request|
           "OR" == request.to_hash["q.op"]
         }
-        @parser.parse_query "", :operator => :or
+        @parser.parse_query "foo", :operator => :or
       end
     
-      should "not execute anything if the query is empty" do
+      should "not execute anything if the query is nil" do
         ActsAsSolr::Post.expects(:execute).never
-        @parser.parse_query(nil)
+        assert_nil @parser.parse_query(nil)
+      end
+      
+      should "not execute anything if the query is ''" do
+        ActsAsSolr::Post.expects(:execute).never
+        assert_nil @parser.parse_query('')
       end
     
       should "raise an error if invalid options where specified" do
-        assert_raise(RuntimeError) {@parser.parse_query "", :invalid => true}
+        assert_raise(RuntimeError) {@parser.parse_query "foo", :invalid => true}
       end
     
       should "add the type" do
         ActsAsSolr::Post.expects(:execute).with {|request|
           request.to_hash[:q].include?("(type:ParserMethodsTest)")
         }
-        @parser.parse_query ""
+        @parser.parse_query "foo"
       end
     
       should "append the field types for the specified fields" do
@@ -208,7 +219,7 @@ class ParserMethodsTest < Test::Unit::TestCase
         ActsAsSolr::Post.expects(:execute).with {|request|
           request.to_hash[:fl] == ('id,score')
         }
-        @parser.parse_query ""
+        @parser.parse_query "foo"
       end
     
       context "with the order option" do
