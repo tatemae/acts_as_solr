@@ -36,4 +36,11 @@ class ActsAsSolrTest < Test::Unit::TestCase
     assert_equal 0, records.total
   end
   
+  def test_search_on_empty_string_does_not_return_nil
+    records = Book.multi_solr_search('', :models => [Movie, Category])
+    assert_not_nil records
+    assert_equal [], records.docs
+    assert_equal 0, records.total
+  end
+  
 end
