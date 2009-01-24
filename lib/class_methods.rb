@@ -91,29 +91,48 @@ module ActsAsSolr #:nodoc:
     #                           Book.multi_solr_search "Napoleon OR Tom", :models => [Movie], :results_format => :ids
     #                           => [{"id" => "Movie:1"},{"id" => Book:1}]
     #                          Where the value of each array is as Model:instance_id
+    # scores:: If set to true this will return the score as a 'solr_score' attribute
+    #          for each one of the instances found. Does not currently work with find_id_by_solr
+    # 
+    #            books = Book.multi_solr_search 'ruby OR splinter', :scores => true
+    #            books.records.first.solr_score
+    #            => 1.21321397
+    #            books.records.last.solr_score
+    #            => 0.12321548
     # 
     def multi_solr_search(query, options = {})
-      models = "AND (#{solr_configuration[:type_field]}:#{self.name}"
-      options[:models].each{|m| models << " OR #{solr_configuration[:type_field]}:"+m.to_s} if options[:models].is_a?(Array)
+      models = multi_model_suffix(options)
       options.update(:results_format => :objects) unless options[:results_format]
-      data = parse_query(query, options, models<<")")
-      result = []
-      if data.nil?
+      data = parse_query(query, options, models)
+      
+      if data.nil? or data.total_hits == 0
         return SearchResults.new(:docs => [], :total => 0)
       end
-      
-      docs = data.hits
-      return SearchResults.new(:docs => [], :total => 0) if data.total_hits == 0
+
+      result = find_multi_search_objects(data, options)
+      if options[:scores] and options[:results_format] == :objects
+        add_scores(result, data) 
+      end
+      SearchResults.new :docs => result, :total => data.total_hits
+    end
+
+    def find_multi_search_objects(data, options)
+      result = []
       if options[:results_format] == :objects
-        docs.each{|doc| 
+        data.hits.each do |doc| 
           k = doc.fetch('id').first.to_s.split(':')
           result << k[0].constantize.find_by_id(k[1])
-        }
+        end
       elsif options[:results_format] == :ids
-        docs.each{|doc| result << {"id"=>doc.values.pop.to_s}}
+        data.hits.each{|doc| result << {"id" => doc.values.pop.to_s}}
       end
-
-      SearchResults.new :docs => result, :total => data.total_hits
+      result
+    end
+    
+    def multi_model_suffix(options)
+      models = "AND (#{solr_configuration[:type_field]}:#{self.name}"
+      models << " OR " + options[:models].collect {|m| "#{solr_configuration[:type_field]}:" + m.to_s}.join(" OR ") if options[:models].is_a?(Array)
+      models << ")"
     end
     
     # returns the total number of documents found in the query specified:
