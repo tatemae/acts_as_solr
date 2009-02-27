@@ -41,6 +41,35 @@ module ActsAsSolr #:nodoc:
     #          sort:: Sorts the faceted resuls by highest to lowest count. (true|false)
     #          browse:: This is where the 'drill-down' of the facets work. Accepts an array of
     #                   fields in the format "facet_field:term"
+    #          mincount:: Replacement for zeros (it has been deprecated in Solr). Specifies the
+    #                     minimum count necessary for a facet field to be returned. (Solr's
+    #                     facet.mincount) Overrides :zeros if it is specified. Default is 0.
+    #
+    #          dates:: Run date faceted queries using the following arguments:
+    #            fields:: The fields to be included in the faceted date search (Solr's facet.date).
+    #                     It may be either a String/Symbol or Hash. If it's a hash the options are the
+    #                     same as date_facets minus the fields option (i.e., :start:, :end, :gap, :other,
+    #                     :between). These options if provided will override the base options.
+    #                     (Solr's f.<field_name>.date.<key>=<value>).
+    #            start:: The lower bound for the first date range for all Date Faceting. Required if
+    #                    :fields is present
+    #            end:: The upper bound for the last date range for all Date Faceting. Required if
+    #                  :fields is prsent
+    #            gap:: The size of each date range expressed as an interval to be added to the lower
+    #                  bound using the DateMathParser syntax.  Required if :fields is prsent
+    #            hardend:: A Boolean parameter instructing Solr what do do in the event that
+    #                      facet.date.gap does not divide evenly between facet.date.start and facet.date.end.
+    #            other:: This param indicates that in addition to the counts for each date range
+    #                    constraint between facet.date.start and facet.date.end, other counds should be
+    #                    calculated. May specify more then one in an Array. The possible options are:
+    #              before:: - all records with lower bound less than start
+    #              after:: - all records with upper bound greater than end
+    #              between:: - all records with field values between start and end
+    #              none:: - compute no other bounds (useful in per field assignment)
+    #              all:: - shortcut for before, after, and between
+    #            filter:: Similar to :query option provided by :facets, in that accepts an array of
+    #                     of date queries to limit results. Can not be used as a part of a :field hash.
+    #                     This is the only option that can be used if :fields is not present.
     # 
     # Example:
     # 
@@ -51,6 +80,24 @@ module ActsAsSolr #:nodoc:
     #                                                 :fields => [:category, :manufacturer],
     #                                                 :browse => ["category:Memory","manufacturer:Someone"]}
     # 
+    #
+    # Examples of date faceting:
+    #
+    #  basic:
+    #    Electronic.find_by_solr "memory", :facets => {:dates => {:fields => [:updated_at, :created_at],
+    #      :start => 'NOW-10YEARS/DAY', :end => 'NOW/DAY', :gap => '+2YEARS', :other => :before}}
+    #
+    #  advanced:
+    #    Electronic.find_by_solr "memory", :facets => {:dates => {:fields => [:updated_at,
+    #    {:created_at => {:start => 'NOW-20YEARS/DAY', :end => 'NOW-10YEARS/DAY', :other => [:before, :after]}
+    #    }], :start => 'NOW-10YEARS/DAY', :end => 'NOW/DAY', :other => :before, :filter =>
+    #    ["created_at:[NOW-10YEARS/DAY TO NOW/DAY]", "updated_at:[NOW-1YEAR/DAY TO NOW/DAY]"]}}
+    #
+    #  filter only:
+    #    Electronic.find_by_solr "memory", :facets => {:dates => {:filter => "updated_at:[NOW-1YEAR/DAY TO NOW/DAY]"}}
+    #
+    #
+    #
     # scores:: If set to true this will return the score as a 'solr_score' attribute
     #          for each one of the instances found. Does not currently work with find_id_by_solr
     # 
