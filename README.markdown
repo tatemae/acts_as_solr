@@ -83,7 +83,7 @@ Mathias Meyer: Current developer<br>
 Support
 =======
 
-Check the [project website](http://mattmatt.github.com/acts_as_solr) or stop by the [Google Group](http://groups.google.com/group/acts_as_solr). Send bug reports through [Lighthouse](http://paperplanes.lighthouseapp.com/projects/29103-acts_as_solr).
+Check the [project website](http://mattmatt.github.com/acts_as_solr) or stop by the [Google Group](http://groups.google.com/group/acts_as_solr). Send bug reports through [GitHub Issues](http://github.com/mattmatt/acts_as_solr/issues).
 
 Release Information
 ======
