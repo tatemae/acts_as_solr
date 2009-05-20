@@ -1,7 +1,8 @@
 ENV['RAILS_ENV']  = (ENV['RAILS_ENV'] || 'development').dup
 # RAILS_ROOT isn't defined yet, so figure it out.
-rails_root_dir = "#{File.dirname(File.expand_path(__FILE__))}/../../../../"
-SOLR_PATH = "#{File.dirname(File.expand_path(__FILE__))}/../solr" unless defined? SOLR_PATH
+dir = File.dirname(__FILE__)
+rails_root_dir = File.expand_path("#{dir}/../../../../")
+SOLR_PATH = File.expand_path("#{dir}/../solr") unless defined? SOLR_PATH
 
 SOLR_LOGS_PATH = "#{rails_root_dir}/log" unless defined? SOLR_LOGS_PATH
 SOLR_PIDS_PATH = "#{rails_root_dir}/tmp/pids" unless defined? SOLR_PIDS_PATH
