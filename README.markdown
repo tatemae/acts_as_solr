@@ -53,11 +53,16 @@ Requirements
 
 Configuration
 ======
-Basically everything is configured to work out of the box. You can use `rake solr:start` and `rake solr:stop`
+If you are using acts_as_solr as a Rails plugin, everything is configured to work out of the box. You can use `rake solr:start` and `rake solr:stop`
 to start and stop the Solr web server (an embedded Jetty). If the default JVM options aren't suitable for
 your environment, you can configure them in solr.yml with the option `jvm_options`. There is a default
 set for the production environment to have some more memory available for the JVM than the defaults, but
 feel free to change them to your liking.
+
+If you are using acts_as_solr as a gem, create a file named lib/tasks/acts_as_solr.rake:
+<pre><code>
+require "acts_as_solr/tasks"
+</code></pre>
 
 Basic Usage
 ======
