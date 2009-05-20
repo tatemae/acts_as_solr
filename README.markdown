@@ -27,6 +27,25 @@ For Rails < 2.1:
 Make sure you copy `vendor/plugins/acts_as_solr/config/solr.yml` to your Rails
 application's config directory, when you install via `git clone`.
 
+Here is an example solr.yml configuration:
+
+<pre><code>
+# Config file for the acts_as_solr plugin.
+#
+# If you change the host or port number here, make sure you update
+# them in your Solr config file
+
+development:
+  url: http://127.0.0.1:8982/solr
+
+production:
+  url: http://127.0.0.1:8983/solr
+  jvm_options: -server -d64 -Xmx1024M -Xms64M
+
+test:
+  url: http://127.0.0.1:8981/solr
+</code></pre>
+
 Requirements
 ------
 * Java Runtime Environment(JRE) 1.5 aka 5.0 [http://www.java.com/en/download/index.jsp](http://www.java.com/en/download/index.jsp)
