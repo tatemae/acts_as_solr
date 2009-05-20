@@ -1,6 +1,3 @@
-require File.dirname(__FILE__) + '/common_methods'
-require File.dirname(__FILE__) + '/parser_methods'
-
 module ActsAsSolr #:nodoc:
 
   module ClassMethods

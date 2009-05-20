@@ -10,8 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr'
-
 class Solr::Importer::SolrSource
   def initialize(solr_url, query, filter_queries=nil, options={})
     @connection = Solr::Connection.new(solr_url)

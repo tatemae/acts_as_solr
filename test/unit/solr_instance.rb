@@ -1,5 +1,3 @@
-require 'instance_methods'
-
 class SolrInstance
   include ActsAsSolr::InstanceMethods
   attr_accessor :configuration, :solr_configuration, :name

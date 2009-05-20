@@ -10,8 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'erb'
-
 # "Abstract" base class, only useful with subclasses that add parameters
 class Solr::Request::Select < Solr::Request::Base
       

@@ -10,8 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr/xml'
-
 class Solr::Request::Optimize < Solr::Request::Update
 
   def to_s

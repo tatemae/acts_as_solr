@@ -10,8 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'net/http'
-
 # TODO: add a convenience method to POST a Solr .xml file, like Solr's example post.sh
 
 class Solr::Connection

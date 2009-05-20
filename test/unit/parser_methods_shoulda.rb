@@ -1,14 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'parser_methods'
-require 'common_methods'
-require 'search_results'
-require 'deprecation'
-module Solr; module Request; end; end
-require 'solr/request/base'
-require 'solr/request/select'
-require 'solr/request/standard'
-require 'parser_instance'
-require 'lazy_document'
+require File.expand_path("#{File.dirname(__FILE__)}/test_helper")
 
 class ActsAsSolr::Post; end
 

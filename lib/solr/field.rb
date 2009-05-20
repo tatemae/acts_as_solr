@@ -10,9 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr/xml'
-require 'time'
-
 class Solr::Field
   VALID_PARAMS = [:boost]
   attr_accessor :name

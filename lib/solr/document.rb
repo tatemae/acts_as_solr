@@ -10,9 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr/xml'
-require 'solr/field'
-
 class Solr::Document
   include Enumerable
   attr_accessor :boost

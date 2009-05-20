@@ -11,9 +11,9 @@
 # limitations under the License.
 
 module Solr; module Importer; end; end
-require 'solr/importer/mapper'
-require 'solr/importer/array_mapper'
-require 'solr/importer/delimited_file_source'
-require 'solr/importer/hpricot_mapper'
-require 'solr/importer/xpath_mapper'
-require 'solr/importer/solr_source'
+require File.expand_path("#{File.dirname(__FILE__)}/importer/mapper")
+require File.expand_path("#{File.dirname(__FILE__)}/importer/array_mapper")
+require File.expand_path("#{File.dirname(__FILE__)}/importer/delimited_file_source")
+require File.expand_path("#{File.dirname(__FILE__)}/importer/hpricot_mapper")
+require File.expand_path("#{File.dirname(__FILE__)}/importer/xpath_mapper")
+require File.expand_path("#{File.dirname(__FILE__)}/importer/solr_source")

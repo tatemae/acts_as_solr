@@ -11,8 +11,8 @@ end
 RAILS_ROOT = File.dirname(__FILE__) unless defined? RAILS_ROOT
 RAILS_ENV  = 'test' unless defined? RAILS_ENV
 
-require File.dirname(__FILE__) + '/../lib/acts_as_solr'
-require File.dirname(__FILE__) + '/../config/solr_environment.rb'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/acts_as_solr')
+require File.expand_path(File.dirname(__FILE__) + '/../config/solr_environment.rb')
 
 # Load Models
 models_dir = File.join(File.dirname( __FILE__ ), 'models')

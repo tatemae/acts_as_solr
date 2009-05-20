@@ -1,8 +1,3 @@
-require 'rubygems'
-require 'rake'
-require 'net/http'
-require 'active_record'
-
 namespace :solr do
 
   desc 'Starts Solr. Options accepted: RAILS_ENV=your_env, PORT=XX. Defaults to development if none.'

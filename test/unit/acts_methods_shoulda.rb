@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'acts_methods'
-require 'mocha'
+require File.expand_path("#{File.dirname(__FILE__)}/test_helper")
 
 class ActsMethodsTest < Test::Unit::TestCase
   class Model

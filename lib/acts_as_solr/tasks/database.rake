@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/../solr_fixtures'
-
 namespace :db do
   namespace :fixtures do
     desc "Load fixtures into the current environment's database. Load specific fixtures using FIXTURES=x,y"

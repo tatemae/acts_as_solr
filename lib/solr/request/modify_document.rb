@@ -10,11 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr/xml'
-require 'solr/request/base'
-require 'solr/document'
-require 'solr/request/update'
-
 class Solr::Request::ModifyDocument < Solr::Request::Update
 
   # Example: ModifyDocument.new(:id => 10, :overwrite => {:field_name => "new value"})

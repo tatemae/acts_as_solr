@@ -1,5 +1,4 @@
-require 'test_helper'
-require 'common_methods'
+require File.expand_path("#{File.dirname(__FILE__)}/test_helper")
 
 class CommonMethodsTest < Test::Unit::TestCase
   include ActsAsSolr::CommonMethods

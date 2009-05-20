@@ -1,13 +1,5 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'instance_methods'
-require 'logger'
+require File.expand_path("#{File.dirname(__FILE__)}/test_helper")
 module Solr; end
-require 'solr/xml'
-require 'solr/field'
-require 'solr/document'
-require 'solr_instance'
-require 'erb'
-require 'ostruct'
 
 class InstanceMethodsTest < Test::Unit::TestCase
 

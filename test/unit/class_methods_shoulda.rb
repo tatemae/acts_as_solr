@@ -1,7 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'class_methods'
-require 'search_results'
-require 'active_support'
+require File.expand_path("#{File.dirname(__FILE__)}/test_helper")
 
 class User
   attr_accessor :name, :id

@@ -11,17 +11,17 @@
 # limitations under the License.
 
 module Solr; module Response; end; end
-require 'solr/response/base'
-require 'solr/response/xml'
-require 'solr/response/ruby'
-require 'solr/response/ping'
-require 'solr/response/add_document'
-require 'solr/response/modify_document'
-require 'solr/response/standard'
-require 'solr/response/spellcheck'
-require 'solr/response/dismax'
-require 'solr/response/commit'
-require 'solr/response/delete'
-require 'solr/response/index_info'
-require 'solr/response/optimize'
-require 'solr/response/select'
+require File.expand_path("#{File.dirname(__FILE__)}/response/base")
+require File.expand_path("#{File.dirname(__FILE__)}/response/xml")
+require File.expand_path("#{File.dirname(__FILE__)}/response/ruby")
+require File.expand_path("#{File.dirname(__FILE__)}/response/ping")
+require File.expand_path("#{File.dirname(__FILE__)}/response/add_document")
+require File.expand_path("#{File.dirname(__FILE__)}/response/modify_document")
+require File.expand_path("#{File.dirname(__FILE__)}/response/standard")
+require File.expand_path("#{File.dirname(__FILE__)}/response/spellcheck")
+require File.expand_path("#{File.dirname(__FILE__)}/response/dismax")
+require File.expand_path("#{File.dirname(__FILE__)}/response/commit")
+require File.expand_path("#{File.dirname(__FILE__)}/response/delete")
+require File.expand_path("#{File.dirname(__FILE__)}/response/index_info")
+require File.expand_path("#{File.dirname(__FILE__)}/response/optimize")
+require File.expand_path("#{File.dirname(__FILE__)}/response/select")

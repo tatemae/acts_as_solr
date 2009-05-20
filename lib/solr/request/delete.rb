@@ -10,8 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'solr/xml'
-
 class Solr::Request::Delete < Solr::Request::Update
 
   # A delete request can be for a specific document id

@@ -11,16 +11,16 @@
 # limitations under the License.
 
 module Solr; module Request; end; end
-require 'solr/request/add_document'
-require 'solr/request/modify_document'
-require 'solr/request/base'
-require 'solr/request/commit'
-require 'solr/request/delete'
-require 'solr/request/ping'
-require 'solr/request/select'
-require 'solr/request/standard'
-require 'solr/request/spellcheck'
-require 'solr/request/dismax'
-require 'solr/request/update'
-require 'solr/request/index_info'
-require 'solr/request/optimize'
+require File.expand_path("#{File.dirname(__FILE__)}/request/base")
+require File.expand_path("#{File.dirname(__FILE__)}/request/update")
+require File.expand_path("#{File.dirname(__FILE__)}/request/add_document")
+require File.expand_path("#{File.dirname(__FILE__)}/request/modify_document")
+require File.expand_path("#{File.dirname(__FILE__)}/request/commit")
+require File.expand_path("#{File.dirname(__FILE__)}/request/delete")
+require File.expand_path("#{File.dirname(__FILE__)}/request/ping")
+require File.expand_path("#{File.dirname(__FILE__)}/request/select")
+require File.expand_path("#{File.dirname(__FILE__)}/request/standard")
+require File.expand_path("#{File.dirname(__FILE__)}/request/spellcheck")
+require File.expand_path("#{File.dirname(__FILE__)}/request/dismax")
+require File.expand_path("#{File.dirname(__FILE__)}/request/index_info")
+require File.expand_path("#{File.dirname(__FILE__)}/request/optimize")
