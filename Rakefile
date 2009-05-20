@@ -61,7 +61,7 @@ begin
     s.homepage = "http://github.com/mattmatt/acts_as_solr"
     s.description = "This plugin adds full text search capabilities and many other nifty features from Apache‘s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
     s.authors = ["Mathias Meyer"]
-    s.files =  FileList["[A-Z]*", "{bin,generators,lib,solr,test}/**/*"]
+    s.files =  FileList["[A-Z]*", "{bin,generators,config,lib,solr,test}/**/*"]
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
