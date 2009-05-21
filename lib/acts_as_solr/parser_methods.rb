@@ -81,7 +81,7 @@ module ActsAsSolr #:nodoc:
         
         ActsAsSolr::Post.execute(Solr::Request::Standard.new(query_options))
       rescue
-        raise "There was a problem executing your search: #{$!} in #{$!.backtrace.first}"
+        raise "There was a problem executing your search\n#{query_options.inspect}\n: #{$!} in #{$!.backtrace.first}"
       end            
     end
     
