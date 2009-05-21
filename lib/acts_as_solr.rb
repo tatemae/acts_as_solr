@@ -43,9 +43,9 @@ module ActsAsSolr
       begin
         if File.exists?(RAILS_ROOT+'/config/solr.yml')
           config = YAML::load_file(RAILS_ROOT+'/config/solr.yml')
-          url = config[RAILS_ENV]['url']
+          url = config[ENV['RAILS_ENV']]['url']
           # for backwards compatibility
-          url ||= "http://#{config[RAILS_ENV]['host']}:#{config[RAILS_ENV]['port']}/#{config[RAILS_ENV]['servlet_path']}"
+          url ||= "http://#{config[ENV['RAILS_ENV']]['host']}:#{config[ENV['RAILS_ENV']]['port']}/#{config[ENV['RAILS_ENV']]['servlet_path']}"
         else
           url = 'http://localhost:8982/solr'
         end
