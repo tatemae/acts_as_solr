@@ -1,5 +1,9 @@
+
 == CHANGE_LOG
 === Development
+<b>NEW</b>:: Using ENV['RAILS_ENV'] instead of RAILS_ENV, so multiple test environments are supported.
+<b>FIX</b>:: Fixed load path collisions
+<b>NEW</b>:: Gemified acts_as_solr
 <b>NEW</b>:: A unit test suite based on Shoulda, not requiring a running Solr or a Rails environment. (Mathias Meyer)
 <b>NEW</b>:: Added the :offline option to the acts_as_solr method. (Mathias Meyer)
 <b>NEW</b>:: Added :lazy flag to find_by_solr, and with that support to load records lazily. (Mathias Meyer)
