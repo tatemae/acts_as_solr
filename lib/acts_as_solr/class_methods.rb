@@ -110,7 +110,7 @@ module ActsAsSolr #:nodoc:
     #
     def find_by_solr(query, options={})
       data = parse_query(query, options)
-      return parse_results(data, options) if data
+      return parse_results(data, options)
     end
     
     # Finds instances of a model and returns an array with the ids:
@@ -119,7 +119,7 @@ module ActsAsSolr #:nodoc:
     # 
     def find_id_by_solr(query, options={})
       data = parse_query(query, options)
-      return parse_results(data, {:format => :ids}) if data
+      return parse_results(data, {:format => :ids})
     end
     
     # This method can be used to execute a search across multiple models:

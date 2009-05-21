@@ -1,6 +1,7 @@
 
 == CHANGE_LOG
 === Development
+<b>NEW</b>:: Return an empty SearchResult, rather than nil, when the query returns nothing.
 <b>NEW</b>:: Better error message for parse errors.
 <b>NEW</b>:: Using ENV['RAILS_ENV'] instead of RAILS_ENV, so multiple test environments are supported.
 <b>FIX</b>:: Fixed load path collisions
