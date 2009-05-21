@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{acts_as_solr}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer"]
-  s.date = %q{2009-05-20}
+  s.date = %q{2009-05-21}
   s.description = %q{This plugin adds full text search capabilities and many other nifty features from ApacheÔs Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
