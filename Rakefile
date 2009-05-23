@@ -3,7 +3,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-Dir["#{File.dirname(__FILE__)}/lib/tasks/**/*.rake"].sort.each { |ext| load ext }
+Dir["#{File.dirname(__FILE__)}/lib/acts_as_solr/tasks/**/*.rake"].sort.each { |ext| load ext }
 
 desc "Default Task"
 task :default => [:test]
@@ -13,7 +13,9 @@ task :test => "test:unit"
 
 namespace :test do
   task :setup do
+    RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/test") unless defined? RAILS_ROOT
     ENV['RAILS_ENV'] = "test"
+    ENV["ACTS_AS_SOLR_TEST"] = "true"
     require File.expand_path("#{File.dirname(__FILE__)}/config/solr_environment")
     puts "Using " + DB
     %x(mysql -u#{MYSQL_USER} < #{File.dirname(__FILE__) + "/test/fixtures/db_definitions/mysql.sql"}) if DB == 'mysql'

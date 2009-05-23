@@ -10,6 +10,8 @@ end
 
 RAILS_ROOT = File.dirname(__FILE__) unless defined? RAILS_ROOT
 RAILS_ENV  = 'test' unless defined? RAILS_ENV
+ENV["RAILS_ENV"] = "test"
+ENV["ACTS_AS_SOLR_TEST"] = "true"
 
 require File.expand_path(File.dirname(__FILE__) + '/../lib/acts_as_solr')
 require File.expand_path(File.dirname(__FILE__) + '/../config/solr_environment.rb')
