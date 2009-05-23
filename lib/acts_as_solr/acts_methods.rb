@@ -158,7 +158,7 @@ module ActsAsSolr #:nodoc:
     #                   acts_as_solr :auto_commit => false
     #                 end
     # 
-    def acts_as_solr(options={}, solr_options={})
+    def acts_as_solr(options={}, solr_options={}, &deferred_configuration)
       
       extend ClassMethods
       include InstanceMethods
@@ -167,16 +167,49 @@ module ActsAsSolr #:nodoc:
       
       cattr_accessor :configuration
       cattr_accessor :solr_configuration
+      cattr_accessor :deferred_configuration
 
       after_save    :solr_save
       after_destroy :solr_destroy
 
-      process_options(options, solr_options)
+      if deferred_configuration
+        self.deferred_configuration = deferred_configuration
+      else
+        self.deferred_configuration = lambda do
+          [options, solr_options]
+        end
+        process_acts_as_solr
+      end
+    end
+
+    def configuration
+      return @configuration if @configuration
+      process_acts_as_solr
+      @configuration
+    end
+
+    def configuration=(value)
+      @configuration = value
+    end
+
+    def process_acts_as_solr
+      return unless self.deferred_configuration
+      
+      local_deferred_configuration = self.deferred_configuration
+      self.deferred_configuration = nil
+      configuration = local_deferred_configuration.call
+
+      if configuration.is_a?(Array)
+        process_options(*configuration)
+      else
+        process_options(configuration)
+      end
+      self.deferred_configuration = nil
     end
 
     private
     def process_options(options={}, solr_options={})
-      self.configuration = {
+      @configuration = {
         :fields => nil,
         :additional_fields => nil,
         :exclude_fields => [],

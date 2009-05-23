@@ -36,6 +36,7 @@ module ActsAsSolr #:nodoc:
     # convert instance to Solr document
     def to_solr_doc
       logger.debug "to_solr_doc: creating doc for class: #{self.class.name}, id: #{record_id(self)}"
+      self.class.process_acts_as_solr
       doc = Solr::Document.new
       doc.boost = validate_boost(configuration[:boost]) if configuration[:boost]
       
@@ -160,6 +161,10 @@ module ActsAsSolr #:nodoc:
             )
           end
         end
+    end
+
+    def configuration
+      self.class.configuration
     end
     
   end
