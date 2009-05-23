@@ -167,8 +167,16 @@ module ActsAsSolr #:nodoc:
       
       cattr_accessor :configuration
       cattr_accessor :solr_configuration
-      
-      self.configuration = { 
+
+      after_save    :solr_save
+      after_destroy :solr_destroy
+
+      process_options(options, solr_options)
+    end
+
+    private
+    def process_options(options={}, solr_options={})
+      self.configuration = {
         :fields => nil,
         :additional_fields => nil,
         :exclude_fields => [],
@@ -178,22 +186,19 @@ module ActsAsSolr #:nodoc:
         :boost => nil,
         :if => "true",
         :offline => false
-      }  
+      }
       self.solr_configuration = {
         :type_field => "type_s",
         :primary_key_field => "pk_i",
         :default_boost => 1.0
       }
-      
+
       configuration.update(options) if options.is_a?(Hash)
       solr_configuration.update(solr_options) if solr_options.is_a?(Hash)
       Deprecation.validate_index(configuration)
-      
+
       configuration[:solr_fields] = {}
       configuration[:solr_includes] = {}
-      
-      after_save    :solr_save
-      after_destroy :solr_destroy
 
       if configuration[:fields].respond_to?(:each)
         process_fields(configuration[:fields])
@@ -206,8 +211,7 @@ module ActsAsSolr #:nodoc:
         process_includes(configuration[:include])
       end
     end
-    
-    private
+
     def get_field_value(field)
       field_name, options = determine_field_name_and_options(field)
       configuration[:solr_fields][field_name] = options
