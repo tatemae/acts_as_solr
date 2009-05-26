@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer"]
   s.date = %q{2009-05-26}
-  s.description = %q{This plugin adds full text search capabilities and many other nifty features from ApacheÔs Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
+  s.description = %q{This plugin adds full text search capabilities and many other nifty features from Apacheï¿½s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -152,7 +152,6 @@ Gem::Specification.new do |s|
     "test/functional/association_indexing_test.rb",
     "test/functional/faceted_search_test.rb",
     "test/functional/multi_solr_search_test.rb",
-    "test/log/jetty.request.log",
     "test/models/author.rb",
     "test/models/book.rb",
     "test/models/category.rb",
@@ -173,7 +172,6 @@ Gem::Specification.new do |s|
     "test/solr/test/index/segments.gen",
     "test/solr/test/index/segments_123",
     "test/test_helper.rb",
-    "test/tmp/pids/test_pid",
     "test/unit/acts_methods_shoulda.rb",
     "test/unit/class_methods_shoulda.rb",
     "test/unit/common_methods_shoulda.rb",
@@ -189,7 +187,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
-  s.summary = %q{This plugin adds full text search capabilities and many other nifty features from ApacheÔs Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
+  s.summary = %q{This plugin adds full text search capabilities and many other nifty features from Apacheï¿½s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.test_files = [
     "test/functional/faceted_search_test.rb",
     "test/functional/acts_as_solr_test.rb",

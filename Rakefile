@@ -58,12 +58,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "acts_as_solr"
-    s.summary = "This plugin adds full text search capabilities and many other nifty features from ApacheÔs Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
+    s.summary = "This plugin adds full text search capabilities and many other nifty features from Apacheï¿½s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
     s.email = "meyer@paperplanes.de"
     s.homepage = "http://github.com/mattmatt/acts_as_solr"
-    s.description = "This plugin adds full text search capabilities and many other nifty features from ApacheÔs Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
+    s.description = "This plugin adds full text search capabilities and many other nifty features from Apacheï¿½s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
     s.authors = ["Mathias Meyer"]
-    s.files =  FileList["[A-Z]*", "{bin,generators,config,lib,solr,test}/**/*"]
+    s.files =  FileList["[A-Z]*", "{bin,generators,config,lib,solr}/**/*"] +
+      FileList["test/**/*"].reject {|f| f.include?("test/log")}.reject {|f| f.include?("test/tmp")}
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
