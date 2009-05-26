@@ -158,58 +158,79 @@ module ActsAsSolr #:nodoc:
     #                   acts_as_solr :auto_commit => false
     #                 end
     # 
-    def acts_as_solr(options={}, solr_options={}, &deferred_configuration)
-      
+    def acts_as_solr(options={}, solr_options={}, &deferred_solr_configuration)
+
       extend ClassMethods
       include InstanceMethods
       include CommonMethods
       include ParserMethods
-      
-      cattr_accessor :configuration
-      cattr_accessor :solr_configuration
-      cattr_accessor :deferred_configuration
+
+      define_solr_configuration_methods
 
       after_save    :solr_save
       after_destroy :solr_destroy
 
-      if deferred_configuration
-        self.deferred_configuration = deferred_configuration
+      if deferred_solr_configuration
+        self.deferred_solr_configuration = deferred_solr_configuration
       else
-        self.deferred_configuration = lambda do
-          [options, solr_options]
-        end
-        process_acts_as_solr
+        process_acts_as_solr(options, solr_options)
       end
     end
 
-    def configuration
-      return @configuration if @configuration
-      process_acts_as_solr
-      @configuration
+    def process_acts_as_solr(options, solr_options)
+      configuration = local_deferred_solr_configuration.call
+      process_options(options, solr_options)
     end
 
-    def configuration=(value)
-      @configuration = value
-    end
-
-    def process_acts_as_solr
-      return unless self.deferred_configuration
+    def define_solr_configuration_methods
+      @@configuration = nil unless defined?(@@configuration)
+      @@solr_configuration = nil unless defined?(@@solr_configuration)
+      @@deferred_solr_configuration = nil unless defined?(@@deferred_solr_configuration)
       
-      local_deferred_configuration = self.deferred_configuration
-      self.deferred_configuration = nil
-      configuration = local_deferred_configuration.call
-
-      if configuration.is_a?(Array)
-        process_options(*configuration)
-      else
-        process_options(configuration)
+      def self.configuration
+        return @@configuration if @@configuration
+        process_deferred_solr_configuration
+        @@configuration
       end
-      self.deferred_configuration = nil
+      class_eval(<<-EOS, __FILE__, __LINE__)
+      def configuration
+        self.class.configuration
+      end
+      EOS
+
+      def self.solr_configuration
+        return @@solr_configuration if @@solr_configuration
+        process_deferred_solr_configuration
+        @@solr_configuration
+      end
+      class_eval(<<-EOS, __FILE__, __LINE__)
+      def solr_configuration
+        self.class.solr_configuration
+      end
+      EOS
+
+      def self.deferred_solr_configuration
+        return @@deferred_solr_configuration if @@deferred_solr_configuration
+        @@deferred_solr_configuration
+      end
+      class_eval(<<-EOS, __FILE__, __LINE__)
+      def deferred_solr_configuration
+        self.class.deferred_solr_configuration
+      end
+      EOS
     end
 
     private
+
+    def process_deferred_solr_configuration
+      return unless deferred_solr_configuration
+      options, solr_options = deferred_solr_configuration.call
+      self.deferred_solr_configuration = nil
+      self.process_options(options, solr_options)
+    end
+
     def process_options(options={}, solr_options={})
-      @configuration = {
+      self.configuration = {
         :fields => nil,
         :additional_fields => nil,
         :exclude_fields => [],

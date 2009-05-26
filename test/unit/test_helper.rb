@@ -1,13 +1,15 @@
-$:.unshift(File.join(File.expand_path(File.dirname(__FILE__)), "..", "..", "lib"))
+dir = File.dirname(__FILE__)
+$:.unshift(File.join(File.expand_path(dir), "..", "..", "lib"))
 
 require 'rubygems'
 require 'test/unit'
 require 'acts_as_solr'
+require 'activesupport'
 require 'mocha'
 require 'active_support'
 require 'logger'
-require 'solr_instance'
-require 'parser_instance'
+require File.expand_path("#{dir}/solr_instance")
+require File.expand_path("#{dir}/parser_instance")
 require 'erb'
 require 'ostruct'
 

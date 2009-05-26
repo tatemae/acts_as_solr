@@ -13,7 +13,7 @@ class InstanceMethodsTest < Test::Unit::TestCase
       setup do
         @instance.configuration = {:if => true}
       end
-  
+
       should "return true if the specified proc returns true " do
         @instance.configuration[:offline] = proc {|record| true}
         assert @instance.indexing_disabled?

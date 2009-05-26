@@ -2,6 +2,11 @@ class SolrInstance
   include ActsAsSolr::InstanceMethods
   attr_accessor :configuration, :solr_configuration, :name
 
+  class << self
+    include ActsAsSolr::ActsMethods
+    include ActsAsSolr::ClassMethods
+  end
+
   def initialize(name = "Chunky bacon!")
     @name = name
   end

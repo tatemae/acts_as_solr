@@ -2,7 +2,7 @@ class ActsAsSolr::ParserInstance
   include ActsAsSolr::ParserMethods
   include ActsAsSolr::CommonMethods
   attr_accessor :configuration, :solr_configuration
-  
+
   def table_name
     "documents"
   end
