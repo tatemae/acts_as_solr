@@ -23,6 +23,11 @@ class ActsAsSolrTest < Test::Unit::TestCase
   
   # Testing the multi_solr_search with multiple models
   def test_multi_solr_search_multiple_models
+    # TODO: Generalize me
+    ActsAsSolr::Post.execute(Solr::Request::Delete.new(:query => 'type_s:Author AND NOT id:"Author:1" AND NOT id:"Author:2"'))
+    ActsAsSolr::Post.execute(Solr::Request::Delete.new(:query => 'type_s:Book AND NOT id:"Book:1" AND NOT id:"Book:2"'))
+    ActsAsSolr::Post.execute(Solr::Request::Commit.new)
+
     records = Book.multi_solr_search "Napoleon OR Tom OR Thriller", :models => [Movie, Category], :results_format => :ids
     assert_equal 3, records.total
     assert records.docs.include?({"id" => "Category:1"})
