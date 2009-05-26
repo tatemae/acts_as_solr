@@ -312,10 +312,10 @@ class ActsAsSolrTest < Test::Unit::TestCase
   def test_find_by_solr_with_score
     books = Book.find_by_solr 'ruby^10 OR splinter', :scores => true
     assert_equal 2, books.total
-    assert (books.max_score >= 0.4 && books.max_score <= 0.6)
+    assert (books.max_score >= 0.3 && books.max_score <= 0.6)
 
     books.records.each { |book| assert_not_nil book.solr_score }
-    assert (books.docs.first.solr_score >= 0.4 && books.docs.first.solr_score <= 0.6)
+    assert (books.docs.first.solr_score >= 0.3 && books.docs.first.solr_score <= 0.6)
     assert (books.docs.last.solr_score >= 0.1 && books.docs.last.solr_score <= 0.2)
   end
   
@@ -386,10 +386,10 @@ class ActsAsSolrTest < Test::Unit::TestCase
   def test_find_by_solr_order_by_score
     books = Book.find_by_solr 'ruby^10 OR splinter', {:scores => true, :order => 'score asc' }
     assert (books.docs.collect(&:solr_score).compact.size == books.docs.size), "Each book should have a score"
-    assert (books.docs.last.solr_score >= 0.4 && books.docs.last.solr_score <= 0.6)
+    assert (books.docs.last.solr_score >= 0.3 && books.docs.last.solr_score <= 0.6)
 
     books = Book.find_by_solr 'ruby^10 OR splinter', {:scores => true, :order => 'score desc' }
-    assert (books.docs.first.solr_score >= 0.4 && books.docs.first.solr_score <= 0.6)
+    assert (books.docs.first.solr_score >= 0.3 && books.docs.first.solr_score <= 0.6)
     assert (books.docs.last.solr_score >= 0.1 && books.docs.last.solr_score <= 0.2)
   end
   

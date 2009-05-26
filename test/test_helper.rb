@@ -18,6 +18,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/solr_environment.r
 
 # Load Models
 models_dir = File.join(File.dirname( __FILE__ ), 'models')
+require "#{models_dir}/book.rb"
 Dir[ models_dir + '/*.rb'].each { |m| require m }
 
 if defined?(ActiveSupport::TestCase)
