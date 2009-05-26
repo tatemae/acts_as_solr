@@ -168,7 +168,7 @@ module ActsAsSolr #:nodoc:
           result << k[0].constantize.find_by_id(k[1])
         end
       elsif options[:results_format] == :ids
-        data.hits.each{|doc| result << {"id" => doc.values.pop.to_s}}
+        data.hits.each{|doc| result << {"id" => doc["id"].to_s}}
       end
       result
     end
