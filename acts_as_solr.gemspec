@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{acts_as_solr}
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer"]
@@ -169,8 +169,16 @@ Gem::Specification.new do |s|
     "test/solr/test/index/_10z.prx",
     "test/solr/test/index/_10z.tii",
     "test/solr/test/index/_10z.tis",
+    "test/solr/test/index/_110.fdt",
+    "test/solr/test/index/_110.fdx",
+    "test/solr/test/index/_110.fnm",
+    "test/solr/test/index/_110.frq",
+    "test/solr/test/index/_110.nrm",
+    "test/solr/test/index/_110.prx",
+    "test/solr/test/index/_110.tii",
+    "test/solr/test/index/_110.tis",
     "test/solr/test/index/segments.gen",
-    "test/solr/test/index/segments_123",
+    "test/solr/test/index/segments_124",
     "test/test_helper.rb",
     "test/unit/acts_methods_shoulda.rb",
     "test/unit/class_methods_shoulda.rb",
