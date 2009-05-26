@@ -178,11 +178,13 @@ module ActsAsSolr #:nodoc:
     end
 
     def process_acts_as_solr(options, solr_options)
-      configuration = local_deferred_solr_configuration.call
-      process_options(options, solr_options)
+      process_solr_options(options, solr_options)
     end
 
     def define_solr_configuration_methods
+      # I'd like to use cattr_accessor, but it does not support lazy loaders and delegation to the class in the instance methods.
+      # TODO: Reconcile with cattr_accessor, or a more appropriate method.
+      class_eval(<<-EOS, __FILE__, __LINE__)
       @@configuration = nil unless defined?(@@configuration)
       @@solr_configuration = nil unless defined?(@@solr_configuration)
       @@deferred_solr_configuration = nil unless defined?(@@deferred_solr_configuration)
@@ -192,44 +194,55 @@ module ActsAsSolr #:nodoc:
         process_deferred_solr_configuration
         @@configuration
       end
-      class_eval(<<-EOS, __FILE__, __LINE__)
       def configuration
         self.class.configuration
       end
-      EOS
+      def self.configuration=(value)
+        @@configuration = value
+      end
+      def configuration=(value)
+        self.class.configuration = value
+      end
 
       def self.solr_configuration
         return @@solr_configuration if @@solr_configuration
         process_deferred_solr_configuration
         @@solr_configuration
       end
-      class_eval(<<-EOS, __FILE__, __LINE__)
       def solr_configuration
         self.class.solr_configuration
       end
-      EOS
+      def self.solr_configuration=(value)
+        @@solr_configuration = value
+      end
+      def solr_configuration=(value)
+        self.class.solr_configuration = value
+      end
 
       def self.deferred_solr_configuration
         return @@deferred_solr_configuration if @@deferred_solr_configuration
         @@deferred_solr_configuration
       end
-      class_eval(<<-EOS, __FILE__, __LINE__)
       def deferred_solr_configuration
         self.class.deferred_solr_configuration
       end
+      def self.deferred_solr_configuration=(value)
+        @@deferred_solr_configuration = value
+      end
+      def deferred_solr_configuration=(value)
+        self.class.deferred_solr_configuration = value
+      end
       EOS
     end
-
-    private
 
     def process_deferred_solr_configuration
       return unless deferred_solr_configuration
       options, solr_options = deferred_solr_configuration.call
       self.deferred_solr_configuration = nil
-      self.process_options(options, solr_options)
+      self.process_solr_options(options, solr_options)
     end
 
-    def process_options(options={}, solr_options={})
+    def process_solr_options(options={}, solr_options={})
       self.configuration = {
         :fields => nil,
         :additional_fields => nil,
@@ -265,6 +278,8 @@ module ActsAsSolr #:nodoc:
         process_includes(configuration[:include])
       end
     end
+
+    private
 
     def get_field_value(field)
       field_name, options = determine_field_name_and_options(field)
