@@ -47,7 +47,7 @@ namespace :solr do
     require File.expand_path("#{File.dirname(__FILE__)}/../../../config/solr_environment")
     raise "In production mode.  I'm not going to delete the index, sorry." if ENV['RAILS_ENV'] == "production"
     if File.exists?("#{SOLR_DATA_PATH}")
-      Dir["#{SOLR_DATA_PATH}/index/*"].each{|f| File.unlink(f)}
+      Dir["#{SOLR_DATA_PATH}/index/*"].each{|f| File.unlink(f) if File.exists?(f)}
       Dir.rmdir("#{SOLR_DATA_PATH}/index")
       puts "Index files removed under " + ENV['RAILS_ENV'] + " environment"
     end
