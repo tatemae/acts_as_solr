@@ -3,6 +3,9 @@ namespace :solr do
   desc 'Starts Solr. Options accepted: RAILS_ENV=your_env, PORT=XX. Defaults to development if none.'
   task :start do
     require File.expand_path("#{File.dirname(__FILE__)}/../../../config/solr_environment")
+    FileUtils.mkdir_p(SOLR_LOGS_PATH)
+    FileUtils.mkdir_p(SOLR_DATA_PATH)
+    FileUtils.mkdir_p(SOLR_PIDS_PATH)
     begin
       n = Net::HTTP.new('127.0.0.1', SOLR_PORT)
       n.request_head('/').value 

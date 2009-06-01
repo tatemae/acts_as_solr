@@ -8,15 +8,12 @@ SOLR_PATH = File.expand_path("#{dir}/../solr") unless defined? SOLR_PATH
 RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../test") unless defined? RAILS_ROOT
 unless defined? SOLR_LOGS_PATH
   SOLR_LOGS_PATH = ENV["SOLR_LOGS_PATH"] || "#{RAILS_ROOT}/log"
-  FileUtils.mkdir_p(SOLR_LOGS_PATH)
 end
 unless defined? SOLR_PIDS_PATH
   SOLR_PIDS_PATH = ENV["SOLR_PIDS_PATH"] || "#{RAILS_ROOT}/tmp/pids"
-  FileUtils.mkdir_p(SOLR_PIDS_PATH)
 end
 unless defined? SOLR_DATA_PATH
   SOLR_DATA_PATH = ENV["SOLR_DATA_PATH"] || "#{RAILS_ROOT}/solr/#{ENV['RAILS_ENV']}"
-  FileUtils.mkdir_p(SOLR_DATA_PATH)
 end
 
 unless defined? SOLR_PORT
