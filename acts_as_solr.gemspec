@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.version = "0.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Mathias Meyer"]
-  s.date = %q{2009-06-01}
+  s.authors = ["Mathias Meyer, Joel Duffin, Justin Ball"]
+  s.date = %q{2009-06-15}
   s.description = %q{This plugin adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
@@ -140,7 +140,6 @@ Gem::Specification.new do |s|
      "test/db/migrate/006_create_postings.rb",
      "test/db/migrate/007_create_posts.rb",
      "test/db/migrate/008_create_gadgets.rb",
-     "test/db/test.db",
      "test/fixtures/authors.yml",
      "test/fixtures/books.yml",
      "test/fixtures/categories.yml",
