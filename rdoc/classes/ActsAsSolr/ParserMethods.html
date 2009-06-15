@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: ActsAsSolr::ParserMethods</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">ActsAsSolr::ParserMethods</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/acts_as_solr/parser_methods_rb.html">
+                lib/acts_as_solr/parser_methods.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000027">add_scores</a>&nbsp;&nbsp;
+      <a href="#M000024">find_objects</a>&nbsp;&nbsp;
+      <a href="#M000021">parse_query</a>&nbsp;&nbsp;
+      <a href="#M000023">parse_results</a>&nbsp;&nbsp;
+      <a href="#M000025">reorder</a>&nbsp;&nbsp;
+      <a href="#M000026">replace_types</a>&nbsp;&nbsp;
+      <a href="#M000028">scorable_record?</a>&nbsp;&nbsp;
+      <a href="#M000022">solr_type_condition</a>&nbsp;&nbsp;
+      <a href="#M000029">validate_date_facet_other_options</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Protected Instance methods</h3>
+
+      <div id="method-M000027" class="method-detail">
+        <a name="M000027"></a>
+
+        <div class="method-heading">
+          <a href="#M000027" class="method-signature">
+          <span class="method-name">add_scores</span><span class="method-args">(results, solr_data)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Adds the score to each one of the instances found
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000027-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 173</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_scores</span>(<span class="ruby-identifier">results</span>, <span class="ruby-identifier">solr_data</span>)
+      <span class="ruby-identifier">with_score</span> = []
+      <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">hits</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">doc</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">with_score</span>.<span class="ruby-identifier">push</span>([<span class="ruby-identifier">doc</span>[<span class="ruby-value str">&quot;score&quot;</span>], 
+          <span class="ruby-identifier">results</span>.<span class="ruby-identifier">find</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">record</span><span class="ruby-operator">|</span> <span class="ruby-identifier">scorable_record?</span>(<span class="ruby-identifier">record</span>, <span class="ruby-identifier">doc</span>) }])
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">with_score</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">score</span>, <span class="ruby-identifier">object</span><span class="ruby-operator">|</span> 
+        <span class="ruby-keyword kw">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">object</span>; <span class="ruby-identifier">attr_accessor</span> <span class="ruby-identifier">:solr_score</span>; <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">object</span>.<span class="ruby-identifier">solr_score</span> = <span class="ruby-identifier">score</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
+
+        <div class="method-heading">
+          <a href="#M000024" class="method-signature">
+          <span class="method-name">find_objects</span><span class="method-args">(ids, options, configuration)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000024-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000024-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 121</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_objects</span>(<span class="ruby-identifier">ids</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">configuration</span>)
+      <span class="ruby-identifier">result</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:lazy</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:format</span>] <span class="ruby-operator">!=</span> <span class="ruby-identifier">:ids</span>
+        <span class="ruby-identifier">ids</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-constant">ActsAsSolr</span><span class="ruby-operator">::</span><span class="ruby-constant">LazyDocument</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">id</span>, <span class="ruby-keyword kw">self</span>)}
+      <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:format</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:objects</span>
+        <span class="ruby-identifier">conditions</span> = [ <span class="ruby-node">&quot;#{self.table_name}.#{primary_key} in (?)&quot;</span>, <span class="ruby-identifier">ids</span> ]
+        <span class="ruby-identifier">find_options</span> = {<span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">conditions</span>}
+        <span class="ruby-identifier">find_options</span>[<span class="ruby-identifier">:include</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:include</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:include</span>]
+        <span class="ruby-identifier">find_options</span>[<span class="ruby-identifier">:select</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:select</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:select</span>]
+        <span class="ruby-identifier">find_options</span>[<span class="ruby-identifier">:joins</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:joins</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:joins</span>]
+        <span class="ruby-identifier">result</span> = <span class="ruby-identifier">reorder</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:all</span>, <span class="ruby-identifier">find_options</span>), <span class="ruby-identifier">ids</span>)
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">ids</span>
+      <span class="ruby-keyword kw">end</span>
+        
+      <span class="ruby-identifier">result</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
+
+        <div class="method-heading">
+          <a href="#M000021" class="method-signature">
+          <span class="method-name">parse_query</span><span class="method-args">(query=nil, options={}, models=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Method used by mostly all the <a href="ClassMethods.html">ClassMethods</a>
+when doing a search
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000021-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000021-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 6</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parse_query</span>(<span class="ruby-identifier">query</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-identifier">models</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-identifier">valid_options</span> = [<span class="ruby-identifier">:offset</span>, <span class="ruby-identifier">:limit</span>, <span class="ruby-identifier">:facets</span>, <span class="ruby-identifier">:models</span>, <span class="ruby-identifier">:results_format</span>, <span class="ruby-identifier">:order</span>, <span class="ruby-identifier">:scores</span>, <span class="ruby-identifier">:operator</span>, <span class="ruby-identifier">:include</span>, <span class="ruby-identifier">:lazy</span>, <span class="ruby-identifier">:joins</span>, <span class="ruby-identifier">:select</span>, <span class="ruby-identifier">:core</span>]
+      <span class="ruby-identifier">query_options</span> = {}
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">query</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-value str">''</span>)
+
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Invalid parameters: #{(options.keys - valid_options).join(',')}&quot;</span> <span class="ruby-keyword kw">unless</span> (<span class="ruby-identifier">options</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">valid_options</span>).<span class="ruby-identifier">empty?</span>
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-constant">Deprecation</span>.<span class="ruby-identifier">validate_query</span>(<span class="ruby-identifier">options</span>)
+        <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:start</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:offset</span>]
+        <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:rows</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:limit</span>]
+        <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:operator</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:operator</span>]
+        
+        <span class="ruby-comment cmt"># first steps on the facet parameter processing</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>]
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>] = {}
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:limit</span>] = <span class="ruby-value">-1</span>  <span class="ruby-comment cmt"># TODO: make this configurable</span>
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:sort</span>] = <span class="ruby-identifier">:count</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:sort</span>]
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:mincount</span>] = <span class="ruby-value">0</span>
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:mincount</span>] = <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:zeros</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>
+          <span class="ruby-comment cmt"># override the :zeros (it's deprecated anyway) if :mincount exists</span>
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:mincount</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:mincount</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:mincount</span>]
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:fields</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:fields</span>].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{k}_facet&quot;</span>} <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:fields</span>]
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:filter_queries</span>] = <span class="ruby-identifier">replace_types</span>([<span class="ruby-operator">*</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:browse</span>]].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{k.sub!(/ *: */,&quot;_facet:&quot;)}&quot;</span>}) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:browse</span>]
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:queries</span>] = <span class="ruby-identifier">replace_types</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:query</span>].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{k.sub!(/ *: */,&quot;_t:&quot;)}&quot;</span>}) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:query</span>]
+          
+          
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>]
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>] = {}
+            <span class="ruby-comment cmt"># if options[:facets][:dates][:fields] exists then :start, :end, and :gap must be there</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:fields</span>]
+              [<span class="ruby-identifier">:start</span>, <span class="ruby-identifier">:end</span>, <span class="ruby-identifier">:gap</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{k} must be present in faceted date query&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">k</span>) }
+              <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:fields</span>] = []
+              <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:fields</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Hash</span>
+                  <span class="ruby-identifier">key</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-value">0</span>]
+                  <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-node">&quot;#{key}_d&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">f</span>[<span class="ruby-identifier">key</span>]}
+                  <span class="ruby-identifier">validate_date_facet_other_options</span>(<span class="ruby-identifier">f</span>[<span class="ruby-identifier">key</span>][<span class="ruby-identifier">:other</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">f</span>[<span class="ruby-identifier">key</span>][<span class="ruby-identifier">:other</span>]
+                <span class="ruby-keyword kw">else</span>
+                  <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:fields</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{f}_d&quot;</span>
+                <span class="ruby-keyword kw">end</span>
+              }
+            <span class="ruby-keyword kw">end</span>
+            
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:start</span>]   = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:start</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:start</span>]
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:end</span>]     = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:end</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:end</span>]
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:gap</span>]     = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:gap</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:gap</span>]
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:hardend</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:hardend</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:hardend</span>]
+            <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:filter</span>]  = <span class="ruby-identifier">replace_types</span>([<span class="ruby-operator">*</span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:filter</span>]].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{k.sub!(/ *:(?!\d) */,&quot;_d:&quot;)}&quot;</span>}) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:filter</span>]
+
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:other</span>]
+              <span class="ruby-identifier">validate_date_facet_other_options</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:other</span>])
+              <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:date_facets</span>][<span class="ruby-identifier">:other</span>]   = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>][<span class="ruby-identifier">:dates</span>][<span class="ruby-identifier">:other</span>]
+            <span class="ruby-keyword kw">end</span>
+            
+          <span class="ruby-keyword kw">end</span>          
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">models</span>.<span class="ruby-identifier">nil?</span>
+          <span class="ruby-comment cmt"># TODO: use a filter query for type, allowing Solr to cache it individually</span>
+          <span class="ruby-identifier">models</span> = <span class="ruby-node">&quot;AND #{solr_type_condition}&quot;</span>
+          <span class="ruby-identifier">field_list</span> = <span class="ruby-identifier">solr_configuration</span>[<span class="ruby-identifier">:primary_key_field</span>]
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">field_list</span> = <span class="ruby-value str">&quot;id&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:field_list</span>] = [<span class="ruby-identifier">field_list</span>, <span class="ruby-value str">'score'</span>]
+        <span class="ruby-identifier">query</span> = <span class="ruby-node">&quot;(#{query.gsub(/ *: */,&quot;_t:&quot;)}) #{models}&quot;</span>
+        <span class="ruby-identifier">order</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:order</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\s*,\s*/</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s+/</span>,<span class="ruby-value str">'_t '</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\bscore_t\b/</span>, <span class="ruby-value str">'score'</span>)  }.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:order</span>] 
+        <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:query</span>] = <span class="ruby-identifier">replace_types</span>([<span class="ruby-identifier">query</span>])[<span class="ruby-value">0</span>] <span class="ruby-comment cmt"># TODO adjust replace_types to work with String or Array  </span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:order</span>]
+          <span class="ruby-comment cmt"># TODO: set the sort parameter instead of the old ;order. style.</span>
+          <span class="ruby-identifier">query_options</span>[<span class="ruby-identifier">:query</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">';'</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">replace_types</span>([<span class="ruby-identifier">order</span>], <span class="ruby-keyword kw">false</span>)[<span class="ruby-value">0</span>]
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-constant">ActsAsSolr</span><span class="ruby-operator">::</span><span class="ruby-constant">Post</span>.<span class="ruby-identifier">execute</span>(<span class="ruby-constant">Solr</span><span class="ruby-operator">::</span><span class="ruby-constant">Request</span><span class="ruby-operator">::</span><span class="ruby-constant">Standard</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">query_options</span>), <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:core</span>])
+      <span class="ruby-keyword kw">rescue</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;There was a problem executing your search\n#{query_options.inspect}\n: #{$!} in #{$!.backtrace.first}&quot;</span>
+      <span class="ruby-keyword kw">end</span>            
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
+
+        <div class="method-heading">
+          <a href="#M000023" class="method-signature">
+          <span class="method-name">parse_results</span><span class="method-args">(solr_data, options = {})</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Parses the data returned from Solr
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000023-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000023-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 95</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parse_results</span>(<span class="ruby-identifier">solr_data</span>, <span class="ruby-identifier">options</span> = {})
+      <span class="ruby-identifier">results</span> = {
+        <span class="ruby-identifier">:docs</span> =<span class="ruby-operator">&gt;</span> [],
+        <span class="ruby-identifier">:total</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      }
+      
+      <span class="ruby-identifier">configuration</span> = {
+        <span class="ruby-identifier">:format</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:objects</span>
+      }
+      <span class="ruby-identifier">results</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">:facets</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-value str">'facet_fields'</span> =<span class="ruby-operator">&gt;</span> []}) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>]
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">SearchResults</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">results</span>) <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">total_hits</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>)
+      
+      <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)
+
+      <span class="ruby-identifier">ids</span> = <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">hits</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">doc</span><span class="ruby-operator">|</span> <span class="ruby-identifier">doc</span>[<span class="ruby-node">&quot;#{solr_configuration[:primary_key_field]}&quot;</span>]}.<span class="ruby-identifier">flatten</span>
+      
+      <span class="ruby-identifier">result</span> = <span class="ruby-identifier">find_objects</span>(<span class="ruby-identifier">ids</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">configuration</span>)
+      
+      <span class="ruby-identifier">add_scores</span>(<span class="ruby-identifier">result</span>, <span class="ruby-identifier">solr_data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:format</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">:objects</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scores</span>]
+      
+      <span class="ruby-identifier">results</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">:facets</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">data</span>[<span class="ruby-value str">'facet_counts'</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:facets</span>]
+      <span class="ruby-identifier">results</span>.<span class="ruby-identifier">update</span>({<span class="ruby-identifier">:docs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>, <span class="ruby-identifier">:total</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">total_hits</span>, <span class="ruby-identifier">:max_score</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">max_score</span>, <span class="ruby-identifier">:query_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">solr_data</span>.<span class="ruby-identifier">data</span>[<span class="ruby-value str">'responseHeader'</span>][<span class="ruby-value str">'QTime'</span>]})
+      <span class="ruby-constant">SearchResults</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">results</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000025" class="method-detail">
+        <a name="M000025"></a>
+
+        <div class="method-heading">
+          <a href="#M000025" class="method-signature">
+          <span class="method-name">reorder</span><span class="method-args">(things, ids)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Reorders the instances keeping the order returned from Solr
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000025-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000025-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 139</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reorder</span>(<span class="ruby-identifier">things</span>, <span class="ruby-identifier">ids</span>)
+      <span class="ruby-identifier">ordered_things</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">things</span>.<span class="ruby-identifier">size</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Out of sync! Found #{ids.size} items in index, but only #{things.size} were found in database!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">things</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">ids</span>.<span class="ruby-identifier">size</span>
+      <span class="ruby-identifier">things</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thing</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">position</span> = <span class="ruby-identifier">ids</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">thing</span>.<span class="ruby-identifier">id</span>)
+        <span class="ruby-identifier">ordered_things</span>[<span class="ruby-identifier">position</span>] = <span class="ruby-identifier">thing</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">ordered_things</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000026" class="method-detail">
+        <a name="M000026"></a>
+
+        <div class="method-heading">
+          <a href="#M000026" class="method-signature">
+          <span class="method-name">replace_types</span><span class="method-args">(strings, include_colon=true)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Replaces the field types based on the types (if any) specified on the
+acts_as_solr call
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000026-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000026-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 151</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">replace_types</span>(<span class="ruby-identifier">strings</span>, <span class="ruby-identifier">include_colon</span>=<span class="ruby-keyword kw">true</span>)
+      <span class="ruby-identifier">suffix</span> = <span class="ruby-identifier">include_colon</span> <span class="ruby-value">? </span><span class="ruby-value str">&quot;:&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:solr_fields</span>]
+        <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:solr_fields</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">solr_name</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:as</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
+          <span class="ruby-identifier">solr_type</span> = <span class="ruby-identifier">get_solr_field_type</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:type</span>])
+          <span class="ruby-identifier">field</span> = <span class="ruby-node">&quot;#{solr_name}_#{solr_type}#{suffix}&quot;</span>
+          <span class="ruby-identifier">strings</span>.<span class="ruby-identifier">each_with_index</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">s</span>,<span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">strings</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/#{solr_name.to_s}_t#{suffix}/</span>,<span class="ruby-identifier">field</span>) }
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:solr_includes</span>]
+        <span class="ruby-identifier">configuration</span>[<span class="ruby-identifier">:solr_includes</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">solr_name</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:as</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">association</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">singularize</span>
+          <span class="ruby-identifier">solr_type</span> = <span class="ruby-identifier">get_solr_field_type</span>(<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:type</span>])
+          <span class="ruby-identifier">field</span> = <span class="ruby-node">&quot;#{solr_name}_#{solr_type}#{suffix}&quot;</span>
+          <span class="ruby-identifier">strings</span>.<span class="ruby-identifier">each_with_index</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">s</span>,<span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">strings</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/#{solr_name.to_s}_t#{suffix}/</span>,<span class="ruby-identifier">field</span>) }
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">strings</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000028" class="method-detail">
+        <a name="M000028"></a>
+
+        <div class="method-heading">
+          <a href="#M000028" class="method-signature">
+          <span class="method-name">scorable_record?</span><span class="method-args">(record, doc)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000028-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000028-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 185</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">scorable_record?</span>(<span class="ruby-identifier">record</span>, <span class="ruby-identifier">doc</span>)
+      <span class="ruby-identifier">doc_id</span> = <span class="ruby-identifier">doc</span>[<span class="ruby-node">&quot;#{solr_configuration[:primary_key_field]}&quot;</span>]
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">doc_id</span>.<span class="ruby-identifier">nil?</span>
+        <span class="ruby-identifier">doc_id</span> = <span class="ruby-identifier">doc</span>[<span class="ruby-value str">&quot;id&quot;</span>]
+        <span class="ruby-node">&quot;#{record.class.name}:#{record_id(record)}&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">doc_id</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">to_s</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">record_id</span>(<span class="ruby-identifier">record</span>).<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">doc_id</span>.<span class="ruby-identifier">to_s</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
+
+        <div class="method-heading">
+          <a href="#M000022" class="method-signature">
+          <span class="method-name">solr_type_condition</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000022-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000022-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 88</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">solr_type_condition</span>
+      <span class="ruby-identifier">subclasses</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-node">&quot;(#{solr_configuration[:type_field]}:#{self.name}&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">condition</span>, <span class="ruby-identifier">subclass</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">condition</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; OR #{solr_configuration[:type_field]}:#{subclass.name}&quot;</span>
+      <span class="ruby-keyword kw">end</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">')'</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000029" class="method-detail">
+        <a name="M000029"></a>
+
+        <div class="method-heading">
+          <a href="#M000029" class="method-signature">
+          <span class="method-name">validate_date_facet_other_options</span><span class="method-args">(options)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000029-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000029-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/acts_as_solr/parser_methods.rb, line 195</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">validate_date_facet_other_options</span>(<span class="ruby-identifier">options</span>)
+      <span class="ruby-identifier">valid_other_options</span> = [<span class="ruby-identifier">:after</span>, <span class="ruby-identifier">:all</span>, <span class="ruby-identifier">:before</span>, <span class="ruby-identifier">:between</span>, <span class="ruby-identifier">:none</span>]
+      <span class="ruby-identifier">options</span> = [<span class="ruby-identifier">options</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Array</span>
+      <span class="ruby-identifier">bad_options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_sym</span>} <span class="ruby-operator">-</span> <span class="ruby-identifier">valid_other_options</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Invalid option#{'s' if bad_options.size &gt; 1} for faceted date's other param: #{bad_options.join(', ')}. May only be one of :after, :all, :before, :between, :none&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bad_options</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
