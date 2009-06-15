@@ -4,7 +4,7 @@ module ActsAsSolr #:nodoc:
     
     # Method used by mostly all the ClassMethods when doing a search
     def parse_query(query=nil, options={}, models=nil)
-      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include, :lazy]
+      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include, :lazy, :joins, :select, :core]
       query_options = {}
 
       return nil if (query.nil? || query.strip == '')
@@ -79,7 +79,7 @@ module ActsAsSolr #:nodoc:
           query_options[:query] << ';' << replace_types([order], false)[0]
         end
         
-        ActsAsSolr::Post.execute(Solr::Request::Standard.new(query_options))
+        ActsAsSolr::Post.execute(Solr::Request::Standard.new(query_options), options[:core])
       rescue
         raise "There was a problem executing your search\n#{query_options.inspect}\n: #{$!} in #{$!.backtrace.first}"
       end            
@@ -125,6 +125,8 @@ module ActsAsSolr #:nodoc:
         conditions = [ "#{self.table_name}.#{primary_key} in (?)", ids ]
         find_options = {:conditions => conditions}
         find_options[:include] = options[:include] if options[:include]
+        find_options[:select] = options[:select] if options[:select]
+        find_options[:joins] = options[:joins] if options[:joins]
         result = reorder(self.find(:all, find_options), ids)
       else
         ids
