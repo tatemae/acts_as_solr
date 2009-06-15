@@ -39,7 +39,7 @@ require File.dirname(__FILE__) + '/acts_as_solr/lazy_document'
 module ActsAsSolr
   
   class Post    
-    def self.execute(request)
+    def self.execute(request, core = nil)
       begin
         if File.exists?(RAILS_ROOT+'/config/solr.yml')
           config = YAML::load_file(RAILS_ROOT+'/config/solr.yml')
@@ -49,6 +49,7 @@ module ActsAsSolr
         else
           url = 'http://localhost:8982/solr'
         end
+        url += "/" + core if !core.nil?
         connection = Solr::Connection.new(url)
         return connection.send(request)
       rescue 
