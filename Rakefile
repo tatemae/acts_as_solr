@@ -57,7 +57,7 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
-    s.name = "acts_as_solr"
+    s.name = "jbasdf-acts_as_solr"
     s.summary = "This plugin adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself."
     s.email = "meyer@paperplanes.de"
     s.homepage = "http://github.com/mattmatt/acts_as_solr"
