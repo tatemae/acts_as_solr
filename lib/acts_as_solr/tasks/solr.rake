@@ -1,7 +1,7 @@
 namespace :solr do
 
   desc 'Starts Solr. Options accepted: RAILS_ENV=your_env, PORT=XX. Defaults to development if none.'
-  task :start do
+  task :start => :environment do
     require File.expand_path("#{File.dirname(__FILE__)}/../../../config/solr_environment")
     FileUtils.mkdir_p(SOLR_LOGS_PATH)
     FileUtils.mkdir_p(SOLR_DATA_PATH)
@@ -13,21 +13,28 @@ namespace :solr do
     rescue Net::HTTPServerException #responding
       puts "Port #{SOLR_PORT} in use" and return
 
-    rescue Errno::ECONNREFUSED #not responding
+    rescue Errno::ECONNREFUSED, Errno::EBADF #not responding
       Dir.chdir(SOLR_PATH) do
-        pid = fork do
-          #STDERR.close
-          exec "java #{SOLR_JVM_OPTIONS} -Dsolr.data.dir=#{SOLR_DATA_PATH} -Djetty.logs=#{SOLR_LOGS_PATH} -Djetty.port=#{SOLR_PORT} -jar start.jar"
+        cmd = "java #{SOLR_JVM_OPTIONS} -Djetty.logs=\"#{SOLR_LOGS_PATH}\" -Dsolr.solr.home=\"#{SOLR_CONFIG_PATH}\" -Dsolr.data.dir=\"#{SOLR_DATA_PATH}\" -Djetty.port=#{SOLR_PORT} -jar start.jar"
+        puts "Executing: " + cmd
+        windows = RUBY_PLATFORM =~ /(win|w)32$/
+        if windows
+          exec cmd
+        else
+          pid = fork do
+            #STDERR.close
+            exec cmd 
+          end
         end
         sleep(5)
-        File.open("#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid", "w"){ |f| f << pid}
+        File.open("#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid", "w"){ |f| f << pid} if windows
         puts "#{ENV['RAILS_ENV']} Solr started successfully on #{SOLR_PORT}, pid: #{pid}."
       end
     end
   end
   
   desc 'Stops Solr. Specify the environment by using: RAILS_ENV=your_env. Defaults to development if none.'
-  task :stop do
+  task :stop=> :environment do
     require File.expand_path("#{File.dirname(__FILE__)}/../../../config/solr_environment")
     fork do
       file_path = "#{SOLR_PIDS_PATH}/#{ENV['RAILS_ENV']}_pid"
@@ -46,7 +53,7 @@ namespace :solr do
   end
   
   desc 'Remove Solr index'
-  task :destroy_index do
+  task :destroy_index => :environment do
     require File.expand_path("#{File.dirname(__FILE__)}/../../../config/solr_environment")
     raise "In production mode.  I'm not going to delete the index, sorry." if ENV['RAILS_ENV'] == "production"
     if File.exists?("#{SOLR_DATA_PATH}")
