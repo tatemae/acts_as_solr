@@ -7,3 +7,4 @@ solr/solr/data/*
 .svn
 test/db/*.db
 test/log/*.log
+pkg/*
