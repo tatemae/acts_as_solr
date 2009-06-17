@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer, Joel Duffin, Justin Ball"]
-  s.date = %q{2009-06-15}
+  s.date = %q{2009-06-16}
   s.description = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
      "VERSION.yml",
      "config/solr.yml",
      "config/solr_environment.rb",
+     "init.rb",
+     "install.rb",
      "lib/acts_as_solr.rb",
      "lib/acts_as_solr/acts_methods.rb",
      "lib/acts_as_solr/class_methods.rb",
@@ -83,6 +85,7 @@ Gem::Specification.new do |s|
      "lib/solr/solrtasks.rb",
      "lib/solr/util.rb",
      "lib/solr/xml.rb",
+     "muck-solr.gemspec",
      "solr/CHANGES.txt",
      "solr/LICENSE.txt",
      "solr/NOTICE.txt",
@@ -129,6 +132,7 @@ Gem::Specification.new do |s|
      "solr/solr/conf/xslt/example_rss.xsl",
      "solr/start.jar",
      "solr/webapps/solr.war",
+     "solr_test_rakefile.rb",
      "test/config/solr.yml",
      "test/db/connections/mysql/connection.rb",
      "test/db/connections/sqlite/connection.rb",
