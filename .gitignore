@@ -8,3 +8,8 @@ solr/solr/data/*
 test/db/*.db
 test/log/*.log
 pkg/*
+*.sw?
+.DS_Store
+coverage
+rdoc
+pkg
