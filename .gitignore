@@ -13,4 +13,11 @@ pkg/*
 coverage
 rdoc
 pkg
-webapps
+solr/webapps/admin
+solr/webapps/WEB-INF
+solr/webapps/META-INF
+solr/webapps/favicon.ico
+solr/webapps/index.jsp
+
+
+
