@@ -85,6 +85,32 @@ module ActsAsSolr #:nodoc:
       end            
     end
     
+    def parse_mlt(uri, options={}, models=nil)
+      valid_options = [:offset, :limit, :facets, :models, :results_format, :order, :scores, :operator, :include, :lazy, :joins, :select, :core]
+      query_options = {}
+
+      return nil if (uri.nil? || uri.strip == '')
+
+      raise "Invalid parameters: #{(options.keys - valid_options).join(',')}" unless (options.keys - valid_options).empty?
+      begin
+        
+        if models.nil?
+          # TODO: use a filter query for type, allowing Solr to cache it individually
+          models = "AND #{solr_type_condition}"
+          field_list = solr_configuration[:primary_key_field]
+        else
+          field_list = "id"
+        end
+        
+        query_options['stream.url'] = uri
+        query_options[:rows] = options[:limit]
+        
+        ActsAsSolr::Post.execute(Solr::Request::Mlt.new(query_options), options[:core])
+      rescue
+        raise "There was a problem executing your search\n#{query_options.inspect}\n: #{$!} in #{$!.backtrace.first}"
+      end            
+    end
+    
     def solr_type_condition
       subclasses.inject("(#{solr_configuration[:type_field]}:#{self.name}") do |condition, subclass|
         condition << " OR #{solr_configuration[:type_field]}:#{subclass.name}"

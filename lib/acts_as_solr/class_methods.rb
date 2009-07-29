@@ -187,6 +187,11 @@ module ActsAsSolr #:nodoc:
       data.total_hits
     end
             
+    def more_like_this(uri, options={})
+      data = parse_mlt(uri, options)
+      return parse_results(data, options)
+    end
+    
     # It's used to rebuild the Solr index for a specific model. 
     #  Book.rebuild_solr_index
     # 
