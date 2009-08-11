@@ -52,17 +52,17 @@ module ActsAsSolr #:nodoc:
     
     # Sends an add command to Solr
     def solr_add(add_xml)
-      ActsAsSolr::Post.execute(Solr::Request::AddDocument.new(add_xml))
+      ActsAsSolr::Post.execute(Solr::Request::AddDocument.new(add_xml), specified_core)
     end
     
     # Sends the delete command to Solr
     def solr_delete(solr_ids)
-      ActsAsSolr::Post.execute(Solr::Request::Delete.new(:id => solr_ids))
+      ActsAsSolr::Post.execute(Solr::Request::Delete.new(:id => solr_ids), specified_core)
     end
     
     # Sends the commit command to Solr
     def solr_commit
-      ActsAsSolr::Post.execute(Solr::Request::Commit.new)
+      ActsAsSolr::Post.execute(Solr::Request::Commit.new, specified_core)
     end
     
     # Optimizes the Solr index. Solr says:
@@ -82,6 +82,19 @@ module ActsAsSolr #:nodoc:
     # Returns the id for the given instance
     def record_id(object)
       eval "object.#{object.class.primary_key}"
+    end
+    
+    private
+    
+    def specified_core
+      if solr_configuration[:multi_core]
+        begin
+          return self.locale.to_s 
+        rescue NoMethodError 
+          return solr_configuration[:default_core]
+        end
+      end
+      nil
     end
     
   end
