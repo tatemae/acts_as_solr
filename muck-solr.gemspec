@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "TESTING_THE_PLUGIN",
-     "VERSION.yml",
+     "VERSION",
      "config/solr.yml",
      "config/solr_environment.rb",
      "lib/acts_as_solr.rb",
