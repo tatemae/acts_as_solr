@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muck-solr}
-  s.version = "0.4.2"
+  s.version = "0.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer, Joel Duffin, Justin Ball"]
-  s.date = %q{2009-08-12}
+  s.date = %q{2009-10-01}
   s.description = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
@@ -176,12 +176,11 @@ Gem::Specification.new do |s|
      "test/unit/solr_instance.rb",
      "test/unit/test_helper.rb"
   ]
-  s.has_rdoc = true
   s.homepage = %q{http://github.com/mattmatt/acts_as_solr}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{muck-solr}
-  s.rubygems_version = %q{1.3.1}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.test_files = [
     "test/db/connections/mysql/connection.rb",
@@ -221,7 +220,7 @@ Gem::Specification.new do |s|
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
     else
