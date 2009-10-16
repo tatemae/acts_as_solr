@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muck-solr}
-  s.version = "0.4.3"
+  s.version = "0.4.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer, Joel Duffin, Justin Ball"]
-  s.date = %q{2009-10-01}
+  s.date = %q{2009-10-16}
   s.description = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
