@@ -67,6 +67,7 @@ begin
     s.files =  FileList["[A-Z]*", "{bin,generators,config,lib,solr}/**/*"] +
       FileList["test/**/*"].reject {|f| f.include?("test/log")}.reject {|f| f.include?("test/tmp")}
   end
+  Jeweler::GemcutterTasks.new
   Jeweler::RubyforgeTasks.new do |rubyforge|
     rubyforge.doc_task = "rdoc"
   end
