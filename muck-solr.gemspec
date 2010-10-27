@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mathias Meyer, Joel Duffin, Justin Ball"]
-  s.date = %q{2010-02-08}
+  s.date = %q{2010-10-27}
   s.description = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.email = %q{meyer@paperplanes.de}
   s.extra_rdoc_files = [
@@ -35,12 +35,9 @@ Gem::Specification.new do |s|
      "lib/acts_as_solr/instance_methods.rb",
      "lib/acts_as_solr/lazy_document.rb",
      "lib/acts_as_solr/parser_methods.rb",
+     "lib/acts_as_solr/railtie.rb",
      "lib/acts_as_solr/search_results.rb",
      "lib/acts_as_solr/solr_fixtures.rb",
-     "lib/acts_as_solr/tasks.rb",
-     "lib/acts_as_solr/tasks/database.rake",
-     "lib/acts_as_solr/tasks/solr.rake",
-     "lib/acts_as_solr/tasks/test.rake",
      "lib/solr.rb",
      "lib/solr/connection.rb",
      "lib/solr/document.rb",
@@ -88,6 +85,9 @@ Gem::Specification.new do |s|
      "lib/solr/solrtasks.rb",
      "lib/solr/util.rb",
      "lib/solr/xml.rb",
+     "lib/tasks/database.rake",
+     "lib/tasks/solr.rake",
+     "lib/tasks/test.rake",
      "solr/CHANGES.txt",
      "solr/LICENSE.txt",
      "solr/NOTICE.txt",
@@ -180,7 +180,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{muck-solr}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{This gem adds full text search capabilities and many other nifty features from Apache�s Solr to any Rails model. I'm currently rearranging the test suite to include a real unit test suite, and adding a few features I need myself.}
   s.test_files = [
     "test/db/connections/mysql/connection.rb",
@@ -222,7 +222,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     else
     end
   else

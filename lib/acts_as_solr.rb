@@ -36,6 +36,9 @@ require File.dirname(__FILE__) + '/acts_as_solr/common_methods'
 require File.dirname(__FILE__) + '/acts_as_solr/deprecation'
 require File.dirname(__FILE__) + '/acts_as_solr/search_results'
 require File.dirname(__FILE__) + '/acts_as_solr/lazy_document'
+
+require File.dirname(__FILE__) + '/acts_as_solr/railtie'
+
 module ActsAsSolr
   
   class Post    
