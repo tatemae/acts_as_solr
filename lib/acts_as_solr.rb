@@ -44,8 +44,8 @@ module ActsAsSolr
   class Post    
     def self.execute(request, core = nil)
       begin
-        if File.exists?(::Rails.root+'/config/solr.yml')
-          config = YAML::load_file(::Rails.root+'/config/solr.yml')
+        if File.exists?("#{::Rails.root}/config/solr.yml")
+          config = YAML::load_file("#{::Rails.root}/config/solr.yml")
           url = config[ENV['RAILS_ENV']]['url']
           # for backwards compatibility
           url ||= "http://#{config[ENV['RAILS_ENV']]['host']}:#{config[ENV['RAILS_ENV']]['port']}/#{config[ENV['RAILS_ENV']]['servlet_path']}"
